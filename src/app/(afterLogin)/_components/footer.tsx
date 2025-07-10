@@ -1,6 +1,6 @@
 export default function MobileFooter() {
   return (
-    <div className="bg-[#757575] text-sm text-white font-normal flex flex-col p-4 gap-3">
+    <div className="bg-[#757575] text-sm text-white font-normal flex flex-col p-4 pb-20 gap-3 ">
       <img src="/logo.png" className="w-40" />
 
       <section>

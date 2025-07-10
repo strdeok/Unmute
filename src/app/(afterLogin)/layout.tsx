@@ -14,8 +14,8 @@ export default function AfterLoginLayout({
         <div className="size-12 bg-gray-600"></div>
       </header>
       <main className="p-4">{children}</main>
-      <BottomNavigation />
       <MobileFooter />
+      <BottomNavigation /> {/* 모바일에만 존재 */}
     </>
   );
 }
