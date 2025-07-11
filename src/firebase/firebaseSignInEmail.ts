@@ -6,15 +6,13 @@ import {
 } from "firebase/auth";
 import { app } from "./firebase";
 
-export default function FirebaseSignInEmail(email: string, password: string) {
+export default function firebaseSignInEmail(email: string, password: string) {
   app;
   const auth = getAuth();
 
   setPersistence(auth, browserLocalPersistence).then(() => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
         location.replace("/main");
       })
       .catch((error) => {

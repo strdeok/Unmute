@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import FirebaseSignInEmail from "@/firebase/firebaseSignInEmail";
+import firebaseSignInEmail from "@/firebase/firebaseSignInEmail";
 
 export default function LoginInput() {
   const [email, setEmail] = useState("");
@@ -39,7 +39,7 @@ export default function LoginInput() {
   const handleSubmit = () => {
     if (isEmailVerified(email) && isPasswordVerified(password)) {
       setEmptyError(false);
-      FirebaseSignInEmail(email, password);
+      firebaseSignInEmail(email, password);
     } else {
       setEmptyError(true);
     }

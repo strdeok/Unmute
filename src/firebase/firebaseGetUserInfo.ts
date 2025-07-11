@@ -1,7 +1,7 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "./firebase";
 
-export default function FirebaseGetUserInfo() {
+export default function firebaseGetUserInfo() {
   app;
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
