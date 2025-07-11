@@ -1,6 +1,6 @@
 "use client";
 
-import FirebaseSignUpEmail from "@/firebase/firebaseSignUpEmail";
+import firebaseSignUpEmail from "@/firebase/firebaseSignUpEmail";
 import { useState } from "react";
 
 export default function Signup() {
@@ -12,6 +12,9 @@ export default function Signup() {
 
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [confirmError, setConfirmError] = useState("");
+
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
 
   const [phone, setPhone] = useState("");
   const [phoneError, setPhoneError] = useState("");
@@ -59,6 +62,14 @@ export default function Signup() {
     }
   };
 
+  const handleNameBlur = () => {
+    if (!name) {
+      setNameError("이름을 입력해주세요.");
+    } else {
+      setNameError("");
+    }
+  };
+
   const handleConfirmBlur = () => {
     if (!doubleCheckPassword(password, passwordConfirm)) {
       setConfirmError("비밀번호가 일치하지 않습니다.");
@@ -77,7 +88,7 @@ export default function Signup() {
   };
 
   const submitInfo = () => {
-    FirebaseSignUpEmail(email, password);
+    firebaseSignUpEmail(email, password, name, phone);
   };
 
   return (
@@ -133,13 +144,21 @@ export default function Signup() {
         )}
       </div>
 
-      <input
-        name="name"
-        type="text"
-        placeholder="이름을 입력해주세요."
-        className="p-4 border-b w-full"
-        required
-      />
+      <div className="w-full">
+        <input
+          name="name"
+          type="text"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+          placeholder="이름을 입력해주세요."
+          className="p-4 border-b w-full"
+          onBlur={handleNameBlur}
+          required
+        />
+        {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
+      </div>
 
       <div className="w-full">
         <input
