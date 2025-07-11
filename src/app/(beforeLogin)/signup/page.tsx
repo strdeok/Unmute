@@ -1,5 +1,6 @@
 "use client";
 
+import FirebaseSignUpEmail from "@/firebase/firebaseSignUpEmail";
 import { useState } from "react";
 
 export default function Signup() {
@@ -75,25 +76,12 @@ export default function Signup() {
     }
   };
 
-  const submitInfo = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const name = formData.get("name");
-    const phone = formData.get("phone");
-
-    console.log({ email, password, name, phone });
-
-    // 서버 전송 로직 넣기
+  const submitInfo = () => {
+    FirebaseSignUpEmail(email, password);
   };
 
   return (
-    <form
-      className="flex flex-col items-center px-4 py-12 gap-4"
-      onSubmit={submitInfo}
-    >
+    <div className="flex flex-col items-center px-4 py-12 gap-4">
       <img src="/logo.png" className="w-80" alt="로고" />
       <div className="text-2xl font-semibold">회원가입</div>
 
@@ -164,15 +152,17 @@ export default function Signup() {
           className="p-4 border-b w-full"
           required
         />
-        {phoneError && <p className="text-red-500 text-sm mt-1">{phoneError}</p>}
+        {phoneError && (
+          <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+        )}
       </div>
 
       <button
-        type="submit"
+        onClick={submitInfo}
         className="bg-[#F6BF53] text-white w-full h-12 rounded-3xl flex justify-center items-center"
       >
         회원가입
       </button>
-    </form>
+    </div>
   );
 }
