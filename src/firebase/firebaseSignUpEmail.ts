@@ -1,4 +1,8 @@
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { app } from "./firebase";
 import firebaseAddUserInfo from "./firebaseAddUserInfo";
 
@@ -13,11 +17,12 @@ export default async function firebaseSignUpEmail(
 
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      return firebaseAddUserInfo(name, email, phone, userCredential.user.uid);
+      firebaseAddUserInfo(name, email, phone, userCredential.user.uid);
+      return userCredential;
     })
-    .then(() => {
-      console.log("완료")
-      alert("회원가입이 완료되었습니다! 입력하신 정보로 로그인해주세요!");
+    .then((userCredential) => {
+      sendEmailVerification(userCredential.user);
+      alert("회원가입이 완료되었습니다! 이메일 인증을 완료해주세요.");
       location.replace("/login");
     })
     .catch((error) => {
