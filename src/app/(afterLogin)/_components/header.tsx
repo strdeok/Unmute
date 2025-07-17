@@ -5,32 +5,44 @@ import firebaseGetUserData from "@/firebase/firebaseGetUserData";
 import firebaseGetUserInfo from "@/firebase/firebaseGetUserInfo";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import SideBar from "./sideBar";
+import DarkSide from "./DarkSide";
 
 export default function Header() {
-  const [userAvatar, setUserAvatar] = useState("null");
+  const [userData, setuserData] = useState<{
+    userAvatar: string | null;
+    userName: string | null;
+  } | null>(null)
+  const [isActiveSideBar, setIsActiveSideBar] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       const user = await firebaseGetUserInfo();
       if (!user) return;
       const userData = await firebaseGetUserData(user.uid);
-      setUserAvatar(userData?.img);
+      setuserData({userAvatar: userData?.img, userName: userData?.name});
       console.log(user);
     }
     fetchData();
   }, []);
 
   return (
-    <header className="flex flex-row w-full px-4 py-2 items-center justify-between">
-      <MenuIcon />
-      <img src="/logo.png" className="w-32" />
-      {userAvatar === "null" ? (
-        <Link href="/login">로그인</Link>
-      ) : (
-        <div className="size-12 bg-gray-300 flex items-center justify-center border rounded-full">
-          <img className="size-6" src={userAvatar} />{" "}
-        </div>
-      )}
-    </header>
+    <>
+      <SideBar isActiveSideBar={isActiveSideBar} userData={userData} />
+      <DarkSide isActiveSideBar={isActiveSideBar} setIsActiveSideBar={setIsActiveSideBar} />
+      <header className="flex flex-row w-full px-4 py-2 items-center justify-between">
+        <button onClick={() => setIsActiveSideBar((prev) => !prev)}>
+          <MenuIcon />
+        </button>
+        <img src="/logo.png" className="w-32" />
+        {userData === null ? ( // TODO: 따로 클라이언트 컴포넌트로 분리
+          <Link href="/login">로그인</Link>
+        ) : (
+          <div className="size-12 bg-gray-300 flex items-center justify-center rounded-full">
+            <img className="size-6" src={userData?.userAvatar ?? ""} />
+          </div>
+        )}
+      </header>
+    </>
   );
 }

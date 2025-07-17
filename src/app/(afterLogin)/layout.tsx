@@ -9,7 +9,7 @@ export default function AfterLoginLayout({
 }) {
   return (
     <>
-      <Header/>
+      <Header />
       <main className="p-4">{children}</main>
       <MobileFooter />
       <BottomNavigation /> {/* 모바일에만 존재 */}
