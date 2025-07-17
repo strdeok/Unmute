@@ -1,18 +1,12 @@
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { app } from "./firebase";
 
-export default function firebaseGetUserInfo() {
-  app;
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      console.log(user);
-      const uid = user.uid;
-    } else {
-      // User is signed out
-      // ...
-    }
+export default function firebaseGetUserInfo(): Promise<User | null> {
+  const auth = getAuth(app);
+  return new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => { // 리스너 등록 함수
+      unsubscribe(); // 최초 1회 콜백 후 구독 해제
+      resolve(user);
+    });
   });
 }
