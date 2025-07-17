@@ -10,13 +10,13 @@ export default function firebaseSignInEmail(email: string, password: string) {
   app;
   const auth = getAuth();
 
-  if (auth.currentUser?.emailVerified === false) {
-    alert("이메일 인증을 완료해주세요.");
-    return;
-  }
   setPersistence(auth, browserLocalPersistence).then(() => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+        if (auth.currentUser?.emailVerified === false) {
+          alert("이메일 인증을 완료해주세요.");
+          return;
+        }
         location.replace("/main");
       })
       .catch((error) => {

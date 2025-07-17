@@ -28,7 +28,7 @@ export default function Welcome() {
         <span className="font-semibold">UNMUTE</span>
       </div>
       <Link
-        href="/login"
+        href="/main"
         className="bg-[#F6BF53] text-white w-full h-12 rounded-3xl flex justify-center items-center"
       >
         시작하기
