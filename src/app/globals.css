@@ -21,9 +21,13 @@ body {
 
 li {
   list-style: none;
-  margin-left: 1rem
+  margin-left: 1rem;
+}
+
+button:hover {
+  cursor: pointer;
 }
 
 .btn-sidebar {
-  @apply w-full h-10 border border-[#E5E5EA]
+  @apply w-full h-10 border border-[#E5E5EA];
 }
