@@ -4,8 +4,6 @@ import RecommendVideos from "./_components/recommendVideos";
 export default function Main() {
   return (
     <>
-      <Category />
-
       <section className="mt-5">
         <h2 className="font-bold text-xl mb-4">추천 동영상</h2>
         <RecommendVideos />
