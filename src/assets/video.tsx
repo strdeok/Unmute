@@ -5,7 +5,7 @@ export default function VideoIcon({fill}:{fill:string}){
 </g>
 <defs>
 <clipPath id="clip0_211_465">
-<rect width="24" height="24" fill="white" transform="translate(0.75)"/>
+<rect width="24" height="24" fill={fill} transform="translate(0.75)"/>
 </clipPath>
 </defs>
 </svg>
