@@ -1,3 +1,4 @@
+import BottomNavigation from "./_components/bottomNavigation";
 import type { Metadata } from "next";
 import "./globals.css";
 import { Suspense } from "react";
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="sm:w-96">
         <Suspense fallback={<Loading />}>{children}</Suspense>
+        <BottomNavigation /> {/* 모바일에만 존재 */}
       </body>
     </html>
   );
