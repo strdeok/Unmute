@@ -22,7 +22,7 @@ export default function SideBar({
         animate={{
           left: isActiveSideBar ? 0 : "-100%",
         }}
-        className="w-80 bg-white h-full rounded-r-xl fixed left-0 top-0 z-50 flex flex-col"
+        className="w-80 bg-white h-full rounded-r-xl fixed -left-full top-0 z-50 flex flex-col"
       >
         <SideBarHeader userData={userData} />
         <SideBarContents isActiveSideBar={isActiveSideBar} setIsActiveSideBar={setIsActiveSideBar} />
