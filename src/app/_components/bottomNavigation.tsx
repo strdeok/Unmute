@@ -13,14 +13,14 @@ export default function BottomNavigation() {
     <div className="fixed bottom-0 w-full bg-white flex flex-row items-center justify-between px-4 py-2.5">
       <Link
         key="main"
-        href="/main"
+        href="/"
         className={`flex flex-col items-center text-sm flex-1 ${
-          pathname === "/main"
+          pathname === "/"
             ? "text-[#F6BF53] font-semibold"
             : "text-[#737373]"
         }`}
       >
-        <HomeIcon fill={pathname === "/main" ? "#F6BF53" : "#737373"} />
+        <HomeIcon fill={pathname === "/" ? "#F6BF53" : "#737373"} />
         <span>메인</span>
       </Link>
 
@@ -41,25 +41,25 @@ export default function BottomNavigation() {
         key="mycourses"
         href="/mycourses"
         className={`flex flex-col items-center text-sm flex-1 ${
-          pathname === "/lecture"
+          pathname === "/mycourses"
             ? "text-[#F6BF53] font-semibold"
             : "text-[#737373]"
         }`}
       >
-        <VideoIcon fill={pathname === "/lecture" ? "#F6BF53" : "#737373"} />
+        <VideoIcon fill={pathname === "/mycourses" ? "#F6BF53" : "#737373"} />
         <span>내 강의</span>
       </Link>
 
       <Link
-        key="profile"
-        href="/profile"
+        key="mypage"
+        href="/mypage"
         className={`flex flex-col items-center text-sm flex-1 ${
-          pathname === "/profile"
+          pathname === "/mypage"
             ? "text-[#F6BF53] font-semibold"
             : "text-[#737373]"
         }`}
       >
-        <UserIcon fill={pathname === "/profile" ? "#F6BF53" : "#737373"} />
+        <UserIcon fill={pathname === "/mypage" ? "#F6BF53" : "#737373"} />
         <span>프로필</span>
       </Link>
     </div>
