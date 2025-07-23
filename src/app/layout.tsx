@@ -1,8 +1,9 @@
+import { Suspense } from "react";
 import BottomNavigation from "./_components/bottomNavigation";
 import type { Metadata } from "next";
 import "./globals.css";
-import { Suspense } from "react";
 import Loading from "./loading";
+import AppQueryClientProvider from "./queryClientProvider";
 
 export const metadata: Metadata = {
   title: "Unmute",
@@ -20,8 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="sm:w-96">
-        <Suspense fallback={<Loading />}>{children}</Suspense>
-        <BottomNavigation /> {/* 모바일에만 존재 */}
+        <AppQueryClientProvider>
+          <Suspense fallback={<Loading />}>{children}</Suspense>
+          <BottomNavigation /> {/* 모바일에만 존재 */}
+        </AppQueryClientProvider>
       </body>
     </html>
   );
