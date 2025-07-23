@@ -1,4 +1,4 @@
-import Category from "./_components/Category";
+import Category from "./_components/category";
 import MobileFooter from "./_components/footer";
 import Header from "./_components/header";
 import RecommendVideos from "./_components/recommendVideos";
