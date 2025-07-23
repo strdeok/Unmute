@@ -1,4 +1,4 @@
-export default function FileUpload(){
+export default function FileUploadIcon(){
     return(
         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M29.3333 39.9998H34.6667V23.9998H42.6667L32 10.6665L21.3333 23.9998H29.3333V39.9998Z" fill="#A6A6A6"/>
