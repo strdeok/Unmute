@@ -21,6 +21,7 @@ export default function SideBar({
         id="sidebar"
         animate={{
           left: isActiveSideBar ? 0 : "-100%",
+          display: isActiveSideBar ? "block" : "none",
         }}
         className="w-80 bg-white h-full rounded-r-xl fixed -left-full top-0 z-50 flex flex-col"
       >
