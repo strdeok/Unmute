@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LectureCard from "./lectureCard";
 
 export default function VideoSection() {
   const videos = [
@@ -66,13 +67,7 @@ export default function VideoSection() {
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
       {videos.map((data) => {
-        return (
-          <Link href={`/lecture/${data.title}`} key={data.title}>
-            <div id="fake-thumbnail" className="w-full h-32 bg-gray-300" />
-            <span className="mt-4 block font-medium">{data.title}</span>
-            <p className="text-sm text-[#737373]">{data.info}</p>
-          </Link>
-        );
+        return <LectureCard key={data.title} lecture={data} />;
       })}
     </div>
   );
