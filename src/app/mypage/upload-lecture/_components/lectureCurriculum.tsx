@@ -1,9 +1,12 @@
 "use client";
 
-import FileUploadIcon from "@/assets/fileUpload";
 import { useUploadLectureMaterial } from "@/hooks/useUploadLectureMaterial";
 import { useUploadLectureVideo } from "@/hooks/useUploadLectureVideo";
 import { ChapterType } from "@/type/chapter";
+import FileUploadIcon from "@/assets/fileUpload";
+import TrashbinIcon from "@/assets/trashbin";
+import { useDeleteLectureVideo } from "@/hooks/useDeleteLectureVideo";
+import { useDeleteMaterialFile } from "@/hooks/useDeleteMaterialFile";
 
 export default function LectureCurriculum({
   chapters,
@@ -12,8 +15,21 @@ export default function LectureCurriculum({
   chapters: ChapterType[];
   setChapters: React.Dispatch<React.SetStateAction<ChapterType[]>>;
 }) {
-  const videoUploadMutation = useUploadLectureVideo();
+  const {
+    startUpload,
+    pause,
+    resume,
+    cancel,
+    progress,
+    isUploading,
+    downloadURL, // Keep this if you use it for other immediate feedback
+  } = useUploadLectureVideo();
+
   const materialUploadMutation = useUploadLectureMaterial();
+
+  const deleteLectureVideoMutation = useDeleteLectureVideo();
+
+  const deleteMaterialMutation = useDeleteMaterialFile();
 
   const addChapter = () => {
     setChapters((prev) => [
@@ -24,6 +40,7 @@ export default function LectureCurriculum({
           {
             title: "",
             videoFile: "",
+            videoFileName: "",
             materialFiles: [],
           },
         ],
@@ -32,6 +49,21 @@ export default function LectureCurriculum({
   };
 
   const removeChapter = (chapterIdx: number) => {
+    const chapter = chapters[chapterIdx];
+
+    // 챕터 내의 모든 강의를 순회하며 영상 및 자료 파일 삭제
+    chapter.lectures.forEach((lecture) => {
+      if (lecture.videoFile) {
+        deleteLectureVideoMutation.mutate(lecture.videoFile);
+      }
+      // 자료 파일 삭제 로직 추가
+      if (lecture.materialFiles && lecture.materialFiles.length > 0) {
+        lecture.materialFiles.forEach((materialUrl) => {
+          deleteMaterialMutation.mutate(materialUrl);
+        });
+      }
+    });
+
     setChapters((prev) => prev.filter((_, idx) => idx !== chapterIdx));
   };
 
@@ -40,18 +72,32 @@ export default function LectureCurriculum({
     updated[chapterIndex].lectures.push({
       title: "",
       videoFile: "",
+      videoFileName: "",
       materialFiles: [],
     });
     setChapters(updated);
   };
 
   const removeLecture = (chapterIndex: number, lectureIndex: number) => {
+    const lecture = chapters[chapterIndex].lectures[lectureIndex];
+
+    // 영상 파일 삭제
+    if (lecture.videoFile) {
+      deleteLectureVideoMutation.mutate(lecture.videoFile);
+    }
+    // 자료 파일 삭제 로직 추가
+    if (lecture.materialFiles && lecture.materialFiles.length > 0) {
+      lecture.materialFiles.forEach((materialUrl) => {
+        deleteMaterialMutation.mutate(materialUrl);
+      });
+    }
+
     const updated = [...chapters];
     updated[chapterIndex].lectures.splice(lectureIndex, 1);
     setChapters(updated);
   };
 
-  const handleVideoUpload = async (
+  const handleVideoUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
     chapterIdx: number,
     lectureIdx: number
@@ -64,22 +110,22 @@ export default function LectureCurriculum({
       return;
     }
 
-    try {
-      const url = await videoUploadMutation.mutateAsync({
-        file,
-        lectureTitle:
-          chapters[chapterIdx].lectures[lectureIdx].title || "untitled",
-        chapterIndex: chapterIdx,
-        lectureIndex: lectureIdx,
-      });
+    const lectureTitle =
+      chapters[chapterIdx].lectures[lectureIdx].title || "untitled";
 
-      const updated = [...chapters];
-      updated[chapterIdx].lectures[lectureIdx].videoFile = url;
-      setChapters(updated);
-    } catch (err) {
-      console.error(err);
-      alert("영상 업로드에 실패했습니다.");
-    }
+    // 업로드 완료 시 콜백
+    startUpload(
+      file,
+      lectureTitle,
+      chapterIdx,
+      lectureIdx,
+      (url, chIdx, lecIdx) => {
+        const updated = [...chapters];
+        updated[chIdx].lectures[lecIdx].videoFile = url;
+        updated[chIdx].lectures[lecIdx].videoFileName = file.name;
+        setChapters(updated);
+      }
+    );
   };
 
   const handleMaterialUpload = async (
@@ -90,7 +136,7 @@ export default function LectureCurriculum({
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    // 파일 크기 제한 검사
+    // 파일 크기 확인
     for (const file of files) {
       if (file.size > 50 * 1024 * 1024) {
         alert("50MB 이하의 자료만 업로드 가능합니다.");
@@ -114,6 +160,7 @@ export default function LectureCurriculum({
       const updated = [...chapters];
       const existingFiles =
         updated[chapterIdx].lectures[lectureIdx].materialFiles || [];
+
       updated[chapterIdx].lectures[lectureIdx].materialFiles = [
         ...existingFiles,
         ...urls,
@@ -123,6 +170,48 @@ export default function LectureCurriculum({
     } catch (err) {
       console.error(err);
       alert("자료 업로드에 실패했습니다.");
+    }
+  };
+
+  const handleDeleteVideo = async (chapterIdx: number, lectureIdx: number) => {
+    const lecture = chapters[chapterIdx].lectures[lectureIdx];
+    if (!lecture.videoFile) return;
+
+    try {
+      await deleteLectureVideoMutation.mutateAsync(lecture.videoFile);
+
+      const updated = [...chapters];
+      updated[chapterIdx].lectures[lectureIdx].videoFile = "";
+      updated[chapterIdx].lectures[lectureIdx].videoFileName = "";
+      setChapters(updated);
+    } catch (err) {
+      console.error("영상 삭제 실패", err);
+      alert("영상 삭제에 실패했습니다.");
+    }
+  };
+
+  const handleDeleteMaterial = async (
+    chapterIdx: number,
+    lectureIdx: number,
+    materialIdx: number
+  ) => {
+    const lecture = chapters[chapterIdx].lectures[lectureIdx];
+    if (!lecture.materialFiles || lecture.materialFiles.length === 0) return;
+
+    try {
+      await deleteMaterialMutation.mutateAsync(
+        lecture.materialFiles[materialIdx]
+      );
+
+      const updated = [...chapters];
+      updated[chapterIdx].lectures[lectureIdx].materialFiles.splice(
+        materialIdx,
+        1
+      );
+      setChapters(updated);
+    } catch (err) {
+      console.error("자료 삭제 실패", err);
+      alert("자료 삭제에 실패했습니다.");
     }
   };
 
@@ -198,45 +287,115 @@ export default function LectureCurriculum({
               {/* 영상 업로드 */}
               <label
                 htmlFor={`video-${chapterIdx}-${lectureIdx}`}
-                className="cursor-pointer border border-[#dddddd] rounded-lg p-2 text-[#A6A6A6] flex flex-col items-center"
+                className="cursor-pointer border border-[#dddddd] rounded-lg p-2 text-sm text-[#A6A6A6] flex flex-col items-center"
               >
-                <FileUploadIcon />
-                {videoUploadMutation.isPending ? (
-                  <p>업로드 중...</p>
-                ) : lecture.videoFile ? (
-                  <p className="text-green-600 text-sm">업로드 완료</p>
-                ) : (
-                  <p>클릭하여 영상을 업로드해주세요.</p>
+                {isUploading && (
+                  <div className="text-sm text-gray-600 text-center w-full flex flex-col items-center gap-2">
+                    <div
+                      id="progress-bar"
+                      className="w-full max-w-96 h-6 rounded-2xl bg-gray-100 overflow-hidden"
+                    >
+                      <div
+                        id="progress"
+                        style={{ width: `${progress}%` }}
+                        className="bg-[#007AFF] h-full rounded-2xl flex flex-row justify-end items-center"
+                      >
+                        <span className="mr-2 text-white">
+                          {progress.toFixed(0)}%
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center gap-2 mt-1">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          pause();
+                        }}
+                      >
+                        ⏸ 일시정지
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          resume();
+                        }}
+                      >
+                        ▶ 재개
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          cancel();
+                        }}
+                      >
+                        ✖ 취소
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {!isUploading && !lecture.videoFile && (
+                  <>
+                    <FileUploadIcon />
+                    <p className="text-center">
+                      클릭하여 강의 영상을 업로드해주세요. <br /> (최대 500MB)
+                    </p>
+                  </>
+                )}
+
+                {!isUploading && lecture.videoFile && (
+                  <div>
+                    <span>{lecture.videoFileName}</span>
+                    <button
+                      id="delete-video-button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleDeleteVideo(chapterIdx, lectureIdx);
+                      }}
+                    >
+                      <TrashbinIcon fill="red" />
+                    </button>
+                  </div>
                 )}
               </label>
               <input
                 id={`video-${chapterIdx}-${lectureIdx}`}
                 type="file"
                 className="hidden"
-                disabled={videoUploadMutation.isPending}
+                disabled={isUploading}
                 onChange={(e) => handleVideoUpload(e, chapterIdx, lectureIdx)}
               />
 
               {/* 자료 업로드 */}
               <label
                 htmlFor={`material-${chapterIdx}-${lectureIdx}`}
-                className="cursor-pointer border border-[#dddddd] rounded-lg p-2 text-[#A6A6A6] flex flex-col items-center"
+                className="cursor-pointer border border-[#dddddd] rounded-lg p-2 text-sm text-[#A6A6A6] flex flex-col items-center"
               >
                 {materialUploadMutation.isPending && <p>업로드 중...</p>}
 
                 {!materialUploadMutation.isPending &&
-                  materialUploadMutation.isSuccess &&
-                  chapter.lectures[lectureIdx].materialFiles?.length > 0 &&
-                  chapter.lectures[lectureIdx].materialFiles.map((url, i) => (
-                    <div key={i}>
+                  lecture.materialFiles && // Check if materialFiles exists
+                  lecture.materialFiles.length > 0 &&
+                  lecture.materialFiles.map((url, i) => (
+                    <div key={i} className="flex items-center gap-2">
                       <a href={url} target="_blank" rel="noopener noreferrer">
                         자료 {i + 1}
                       </a>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDeleteMaterial(chapterIdx, lectureIdx, i);
+                        }}
+                      >
+                        <TrashbinIcon fill="red" />
+                      </button>
                     </div>
                   ))}
 
                 {!materialUploadMutation.isPending &&
-                  !materialUploadMutation.isSuccess && (
+                  (!lecture.materialFiles ||
+                    lecture.materialFiles.length === 0) && (
                     <>
                       <FileUploadIcon />
                       <p>클릭하여 강의 자료를 업로드해주세요.</p>
@@ -251,6 +410,7 @@ export default function LectureCurriculum({
                 onChange={(e) => {
                   handleMaterialUpload(e, chapterIdx, lectureIdx);
                 }}
+                multiple // 파일 여러개 허용
               />
             </div>
           ))}

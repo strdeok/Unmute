@@ -9,7 +9,7 @@ export default async function firebaseUploadLectureMaterial(
 ): Promise<string> {
   const storage = getStorage();
   const fileName = `${lectureTitle}_${chapterIndex}-${lectureIndex}_${uuid()}`;
-  const storageRef = ref(storage, `lecture/${fileName}`);
+  const storageRef = ref(storage, `lectureMaterials/${lectureTitle}/${fileName}`);
 
   await uploadBytes(storageRef, file);
   const url = await getDownloadURL(storageRef);
