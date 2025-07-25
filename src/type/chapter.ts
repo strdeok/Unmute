@@ -2,7 +2,8 @@ export interface ChapterType {
      title: string;
       lectures: {
         title: string;
-        videoFile: File | string | null;
+        videoFile: string | null;
+        videoFileName: string | undefined
         materialFiles: string[]
       }[];
 }

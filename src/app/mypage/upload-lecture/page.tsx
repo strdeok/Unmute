@@ -5,7 +5,7 @@ import SelectLevel from "./_components/selectLevel";
 import LectureCurriculum from "./_components/lectureCurriculum";
 import PrevArrowIcon from "@/assets/prevArrow";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChapterType } from "@/type/chapter";
 import firebaseGetUserInfo from "@/firebase/firebaseGetUserInfo";
 import firebaseUploadThumbnail from "@/firebase/firebaseUploadThumbnail";
@@ -21,6 +21,7 @@ export default function UploadLecturePage() {
         {
           title: "",
           videoFile: null,
+          videoFileName: "",
           materialFiles: [],
         },
       ],
