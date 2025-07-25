@@ -1,4 +1,4 @@
-import firebaseDeleteMaterialFile from "@/firebase/firebaseDeleteMaterialFile";
+import firebaseDeleteMaterialFile from "@/firebase/lecture/firebaseDeleteMaterialFile";
 import { useMutation } from "@tanstack/react-query";
 
 export  function useDeleteMaterialFile() {

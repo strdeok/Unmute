@@ -1,5 +1,5 @@
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { app } from "./firebase";
+import { app } from "../firebase";
 
 export default function firebaseGetUserInfo(): Promise<User | null> {
   const auth = getAuth(app);

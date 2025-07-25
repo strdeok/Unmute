@@ -1,8 +1,8 @@
 "use client";
 
 import MenuIcon from "@/assets/menu";
-import firebaseGetUserData from "@/firebase/firebaseGetUserData";
-import firebaseGetUserInfo from "@/firebase/firebaseGetUserInfo";
+import firebaseGetUserData from "@/firebase/user/firebaseGetUserData";
+import firebaseGetUserInfo from "@/firebase/user/firebaseGetUserInfo";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import SideBar from "./sideBar/sideBar";

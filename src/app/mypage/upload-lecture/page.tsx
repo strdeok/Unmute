@@ -7,8 +7,8 @@ import PrevArrowIcon from "@/assets/prevArrow";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ChapterType } from "@/type/chapter";
-import firebaseGetUserInfo from "@/firebase/firebaseGetUserInfo";
-import firebaseUploadThumbnail from "@/firebase/firebaseUploadThumbnail";
+import firebaseGetUserInfo from "@/firebase/user/firebaseGetUserInfo";
+import firebaseUploadThumbnail from "@/firebase/lecture/firebaseUploadThumbnail";
 import { useUploadLecture } from "@/hooks/useUploadLecture";
 import Loading from "@/app/loading";
 

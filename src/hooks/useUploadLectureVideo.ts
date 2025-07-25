@@ -1,6 +1,6 @@
 // hooks/useUploadLectureVideo.ts
 import { useState } from "react";
-import firebaseUploadLectureVideo from "@/firebase/firebaseUploadLectureVideo";
+import firebaseUploadLectureVideo from "@/firebase/lecture/firebaseUploadLectureVideo";
 
 export function useUploadLectureVideo() {
   const [progress, setProgress] = useState(0);

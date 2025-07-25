@@ -1,7 +1,7 @@
 "use client";
 
-import firebaseGetUserData from "@/firebase/firebaseGetUserData";
-import firebaseGetUserInfo from "@/firebase/firebaseGetUserInfo";
+import firebaseGetUserData from "@/firebase/user/firebaseGetUserData";
+import firebaseGetUserInfo from "@/firebase/user/firebaseGetUserInfo";
 import { useEffect, useState } from "react";
 import MyPageHeader from "./_components/header";
 import NextArrowIcon from "@/assets/nextArrow";

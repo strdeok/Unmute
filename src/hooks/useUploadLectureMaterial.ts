@@ -1,6 +1,6 @@
 // hooks/useUploadLectureVideo.ts
 import { useMutation } from "@tanstack/react-query";
-import firebaseUploadLectureMaterial from "@/firebase/firebaseUploadLectureMaterial";
+import firebaseUploadLectureMaterial from "@/firebase/lecture/firebaseUploadLectureMaterial";
 
 export function useUploadLectureMaterial() {
   return useMutation({

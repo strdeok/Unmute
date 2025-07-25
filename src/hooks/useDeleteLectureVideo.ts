@@ -1,4 +1,4 @@
-import firebaseDeleteLectureVideo from "@/firebase/firebaseDeleteLectureVideo";
+import firebaseDeleteLectureVideo from "@/firebase/lecture/firebaseDeleteLectureVideo";
 import { useMutation } from "@tanstack/react-query";
 
 export function useDeleteLectureVideo() {

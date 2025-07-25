@@ -4,7 +4,7 @@ import {
   setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { app } from "./firebase";
+import { app } from "../firebase";
 
 export default function firebaseSignInEmail(email: string, password: string) {
   app;

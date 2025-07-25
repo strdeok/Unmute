@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { app } from "./firebase";
+import { app } from "../firebase";
 import firebaseAddUserInfo from "./firebaseAddUserInfo";
 
 export default async function firebaseSignUpEmail(
