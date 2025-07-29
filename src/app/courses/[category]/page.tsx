@@ -2,14 +2,11 @@ import Header from "@/app/_components/header";
 import VideoSection from "@/app/_components/videoSection";
 
 interface CategoryPageProps {
-  params: {
-    category: string;
-  };
+  params: Promise<{ category: string }>;
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const { category } = params;
-
+export default async function CategoryPage(props: CategoryPageProps) {
+  const { category } = await props.params; 
   return (
     <>
       <Header />
