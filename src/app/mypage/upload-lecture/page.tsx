@@ -144,7 +144,8 @@ export default function UploadLecturePage() {
         instructorId: user.uid,
         chapters,
       });
-    } catch (_) {
+    } catch (error) {
+      console.log(error)
       alert("오류가 발생하였습니다. 다시 시도해주세요.");
     }
   };

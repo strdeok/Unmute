@@ -3,7 +3,6 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { app } from "../firebase";
 import firebaseAddUserInfo from "./firebaseAddUserInfo";
 
 export default async function firebaseSignUpEmail(
@@ -12,7 +11,6 @@ export default async function firebaseSignUpEmail(
   name: string,
   phone: string
 ) {
-  app;
   const auth = getAuth();
 
   createUserWithEmailAndPassword(auth, email, password)
@@ -27,7 +25,6 @@ export default async function firebaseSignUpEmail(
     })
     .catch((error) => {
       const errorMessage = error.message;
-      console.log(errorMessage);
       switch (errorMessage) {
         case "Firebase: Error (auth/email-already-in-use).":
           alert("이미 존재하는 아이디입니다.");
