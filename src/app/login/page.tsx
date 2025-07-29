@@ -12,7 +12,7 @@ export default function Login() {
       
       <div className="text-sm">아이디 찾기 / 비밀번호 찾기</div>
       <LoginMethods />
-      <Link href="/signup" className="absolute bottom-8 text-[#4300FF]">계정이 없으신가요? 회원가입하기</Link>
+      <Link href="/signup" className="absolute bottom-22 text-[#4300FF]">계정이 없으신가요? 회원가입하기</Link>
     </div>
   );
 }
