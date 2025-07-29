@@ -1,6 +1,6 @@
 "use client";
 
-import firebaseSignUpEmail from "@/firebase/firebaseSignUpEmail";
+import firebaseSignUpEmail from "@/firebase/user/firebaseSignUpEmail";
 import { useState } from "react";
 
 export default function Signup() {

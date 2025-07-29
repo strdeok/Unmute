@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import firebaseSignInEmail from "@/firebase/firebaseSignInEmail";
+import firebaseSignInEmail from "@/firebase/user/firebaseSignInEmail";
 
 export default function LoginInput() {
   const [email, setEmail] = useState("");
