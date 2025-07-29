@@ -3,6 +3,7 @@ import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  StorageError,
 } from "firebase/storage";
 import { v4 as uuid } from "uuid";
 
@@ -13,7 +14,7 @@ export default function firebaseUploadLectureVideo(
   lectureIndex: number,
   onProgress?: (percent: number) => void,
   onSuccess?: (url: string) => void,
-  onError?: (error: any) => void
+  onError?: (error: StorageError) => void
 ) {
   const storage = getStorage();
   const fileName = `${lectureTitle}_${chapterIndex}-${lectureIndex}_${uuid()}`;

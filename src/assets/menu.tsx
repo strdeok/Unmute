@@ -1,4 +1,4 @@
-export default function MenuIcon({ fill }: { fill: string }) {
+export default function MenuIcon() {
   return (
     <svg
       width="20"

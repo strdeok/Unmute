@@ -5,6 +5,7 @@ import LectureCard from "./lectureCard";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import PageNumber from "./pageNumber";
+import { LectureType } from "@/type/lecture";
 
 export default function VideoSection() {
   const params = useSearchParams();
@@ -21,11 +22,11 @@ export default function VideoSection() {
     gcTime: 1000 * 60 * 30 // 데이터를 캐시에 유지할 시간
   });
 
-  const lectureList = data?.data;
+  const lectureList = data?.data as LectureType[]
 
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
-      {lectureList?.map((lecture: any) => (
+      {lectureList?.map((lecture:LectureType) => (
         <LectureCard key={lecture.id} lecture={lecture} />
       ))}
       <PageNumber page={page} />
