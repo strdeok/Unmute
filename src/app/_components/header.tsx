@@ -42,14 +42,14 @@ export default function Header() {
         </button>
 
         <Link href="/">
-          <Image alt="logo" src="/logo.png" className="w-32" />
+          <Image width={128} height={64} alt="logo" src="/logo.png"  />
         </Link>
         
         {userData === null ? ( // TODO: 따로 클라이언트 컴포넌트로 분리
           <Link href="/login">로그인</Link>
         ) : (
           <div className="size-12 bg-gray-300 flex items-center justify-center rounded-full">
-            <Image alt="avatar" className="size-6" src={userData?.userAvatar ?? ""} />
+            <Image width={24} height={24} alt="avatar" src={userData?.userAvatar ?? ""} />
           </div>
         )}
       </header>

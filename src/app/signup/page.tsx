@@ -94,7 +94,7 @@ export default function Signup() {
 
   return (
     <div className="flex flex-col items-center px-4 py-12 gap-4">
-      <Image src="/logo.png" className="w-80" alt="로고" />
+      <Image width={320} height={128} src="/logo.png"  alt="로고" />
       <div className="text-2xl font-semibold">회원가입</div>
 
       <div className="w-full">

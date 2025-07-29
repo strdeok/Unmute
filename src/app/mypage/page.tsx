@@ -32,7 +32,6 @@ export default function Mypage() {
           {userData?.userAvatar && (
             <Image
               alt="avatar"
-              className="size-16"
               src={userData.userAvatar}
               width={64}
               height={64}

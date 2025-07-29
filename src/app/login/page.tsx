@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function Login() {
   return (
     <div className="h-full flex flex-col items-center px-4 py-12 gap-6">
-      <Image alt="logo" src="/logo.png" className="w-80" />
+      <Image width={160} height={64} alt="logo" src="/logo.png" />
       <div className="text-2xl font-semibold">로그인</div>
       <LoginInput />
       

@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function MobileFooter() {
   return (
     <div className="bg-[#757575] text-sm text-white font-normal flex flex-col p-4 pb-20 gap-3 ">
-      <Image alt="logo" src="/logo.png" className="w-40" />
+      <Image width={160} height={64} alt="logo" src="/logo.png" />
 
       <section>
         <span className="text-xl">Contact</span>

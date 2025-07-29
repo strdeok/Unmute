@@ -13,7 +13,7 @@ export default function SideBarHeader({userData}:{
       ) : (
         <>
           <div className="size-11 bg-gray-300 flex items-center justify-center rounded-full">
-            <Image alt="avatar" className="size-6" src={userData?.userAvatar ?? ""} />
+            <Image width={24} height={24} alt="avatar" src={userData?.userAvatar ?? ""} />
           </div>
           <span>{userData.userName}님 환영합니다.</span>
           <div />
