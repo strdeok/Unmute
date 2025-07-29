@@ -11,6 +11,7 @@ import {
 export default async function firebaseUploadLectureInfo({
   title,
   description,
+  category,
   price,
   level,
   thumbnailUrl,
@@ -19,11 +20,13 @@ export default async function firebaseUploadLectureInfo({
 }: {
   title: string;
   description: string;
+  category: string;
   price: number;
   level: string;
   thumbnailUrl: string;
   instructorId: string;
   chapters: ChapterType[];
+  // 카테고리도 추가할 것
 }) {
   // 1. 강의 문서 생성
   const lectureRef = doc(collection(db, "lectures")); // auto-generated id
@@ -32,6 +35,7 @@ export default async function firebaseUploadLectureInfo({
     title,
     description,
     price,
+    category,
     level,
     thumbnailUrl,
     instructorId,
