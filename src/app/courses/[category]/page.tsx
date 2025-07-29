@@ -1,12 +1,13 @@
 import Header from "@/app/_components/header";
 import VideoSection from "@/app/_components/videoSection";
 
-export default async function Category({
+export default function Category({
   params,
 }: {
   params: { category: string };
 }) {
-  const { category } = await params;
+  const { category } = params; 
+
   return (
     <>
       <Header />
