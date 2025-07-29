@@ -11,6 +11,7 @@ import firebaseGetUserInfo from "@/firebase/user/firebaseGetUserInfo";
 import firebaseUploadThumbnail from "@/firebase/lecture/firebaseUploadThumbnail";
 import { useUploadLecture } from "@/hooks/useUploadLecture";
 import Loading from "@/app/loading";
+import Category from "./_components/category";
 
 export default function UploadLecturePage() {
   const router = useRouter();
@@ -27,6 +28,8 @@ export default function UploadLecturePage() {
       ],
     },
   ]);
+  const [thumbnailName, setThumbnailName] = useState("");
+
   const { mutate: uploadLecture, isPending } = useUploadLecture();
 
   const checkForm = (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,6 +38,7 @@ export default function UploadLecturePage() {
     const formData = new FormData(e.currentTarget);
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
+    const category = formData.get("category") as string;
     const price = Number(formData.get("price"));
     const level = formData.get("level") as string;
     const thumbnail = formData.get("thumbnail") as File;
@@ -57,6 +61,11 @@ export default function UploadLecturePage() {
 
     if (!level) {
       alert("강의 수준을 선택해주세요.");
+      return;
+    }
+
+    if (!category) {
+      alert("카테고리를 입력해주세요.");
       return;
     }
 
@@ -104,12 +113,13 @@ export default function UploadLecturePage() {
       }
     }
 
-    submitForm(title, description, price, level, thumbnail);
+    submitForm(title, description, category, price, level, thumbnail);
   };
 
   const submitForm = async (
     title: string,
     description: string,
+    category: string,
     price: number,
     level: string,
     thumbnailFile: File
@@ -120,18 +130,10 @@ export default function UploadLecturePage() {
       // 썸네일 먼저 업로드 → URL 반환
       const thumbnailUrl = await firebaseUploadThumbnail(thumbnailFile); // Storage에 미리 업로드
 
-      console.log(
-        title,
-        description,
-        price,
-        level,
-        thumbnailUrl,
-        user?.uid!,
-        chapters
-      );
       uploadLecture({
         title,
         description,
+        category,
         price,
         level,
         thumbnailUrl,
@@ -141,6 +143,11 @@ export default function UploadLecturePage() {
     } catch (err) {
       alert("오류가 발생하였습니다. 다시 시도해주세요.");
     }
+  };
+
+  const uploadThumbnail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setThumbnailName(file!.name);
   };
 
   if (isPending) {
@@ -189,6 +196,7 @@ export default function UploadLecturePage() {
               className="border border-[#dddddd] rounded-lg px-2 py-1 text-sm"
             />
           </div>
+
           <div className="flex flex-col gap-2 py-3">
             <span className="font-semibold">강의 설명 *</span>
             <textarea
@@ -197,6 +205,7 @@ export default function UploadLecturePage() {
               className="border border-[#dddddd] rounded-lg px-2 py-1 text-sm"
             />
           </div>
+
           <div className="flex flex-col gap-2 py-3">
             <span className="font-semibold">강의 가격 (원) *</span>
             <input
@@ -206,27 +215,39 @@ export default function UploadLecturePage() {
               className="border border-[#dddddd] rounded-lg px-2 py-1 text-sm"
             />
           </div>
+
+          <Category />
+
           <SelectLevel />
 
           <div className="flex flex-col gap-2 py-3">
             <span className="font-semibold">강의 썸네일 *</span>
+
             <label
               htmlFor="file-upload"
-              className="border border-[#dddddd] rounded-lg p-2 text-[#A6A6A6] flex flex-col items-center"
+              className="border border-[#dddddd] rounded-lg
+            p-2 text-[#A6A6A6] flex flex-col items-center"
             >
               <FileUpload />
-              <p>클릭하여 강의 썸네일을 업로드해주세요.</p>
-              <p>JPG, PNG 파일만 가능 (최대 5MB)</p>
+              {thumbnailName ? (
+                <p>{thumbnailName}</p>
+              ) : (
+                <>
+                  <p>클릭하여 강의 썸네일을 업로드해주세요.</p>
+                  <p>JPG, PNG 파일만 가능 (최대 5MB)</p>
+                </>
+              )}
             </label>
             <input
               name="thumbnail"
               id="file-upload"
               type="file"
               className="hidden"
+              onChange={(e) => {
+                uploadThumbnail(e);
+              }}
             />
           </div>
-
-          <div className="flex flex-col gap-2 py-3"></div>
         </div>
 
         <LectureCurriculum chapters={chapters} setChapters={setChapters} />
