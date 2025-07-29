@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function SideBarHeader({userData}:{
   userData: {
     userAvatar: string | null;
@@ -11,7 +13,7 @@ export default function SideBarHeader({userData}:{
       ) : (
         <>
           <div className="size-11 bg-gray-300 flex items-center justify-center rounded-full">
-            <img className="size-6" src={userData?.userAvatar ?? ""} />
+            <Image alt="avatar" className="size-6" src={userData?.userAvatar ?? ""} />
           </div>
           <span>{userData.userName}님 환영합니다.</span>
           <div />

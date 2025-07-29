@@ -1,6 +1,7 @@
 "use client";
 
 import firebaseSignUpEmail from "@/firebase/user/firebaseSignUpEmail";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function Signup() {
@@ -93,7 +94,7 @@ export default function Signup() {
 
   return (
     <div className="flex flex-col items-center px-4 py-12 gap-4">
-      <img src="/logo.png" className="w-80" alt="로고" />
+      <Image src="/logo.png" className="w-80" alt="로고" />
       <div className="text-2xl font-semibold">회원가입</div>
 
       <div className="w-full">

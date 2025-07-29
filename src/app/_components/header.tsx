@@ -6,6 +6,7 @@ import firebaseGetUserInfo from "@/firebase/user/firebaseGetUserInfo";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import SideBar from "./sideBar/sideBar";
+import Image from "next/image";
 
 export default function Header() {
   const [userData, setuserData] = useState<{
@@ -37,18 +38,18 @@ export default function Header() {
           className="hover:cursor-pointer"
           onClick={() => setIsActiveSideBar((prev) => !prev)}
         >
-          <MenuIcon fill="none" />
+          <MenuIcon />
         </button>
 
         <Link href="/">
-          <img src="/logo.png" className="w-32" />
+          <Image alt="logo" src="/logo.png" className="w-32" />
         </Link>
         
         {userData === null ? ( // TODO: 따로 클라이언트 컴포넌트로 분리
           <Link href="/login">로그인</Link>
         ) : (
           <div className="size-12 bg-gray-300 flex items-center justify-center rounded-full">
-            <img className="size-6" src={userData?.userAvatar ?? ""} />
+            <Image alt="avatar" className="size-6" src={userData?.userAvatar ?? ""} />
           </div>
         )}
       </header>

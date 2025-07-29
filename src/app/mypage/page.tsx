@@ -6,12 +6,13 @@ import { useEffect, useState } from "react";
 import MyPageHeader from "./_components/header";
 import NextArrowIcon from "@/assets/nextArrow";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Mypage() {
   const [userData, setuserData] = useState<{
-    userAvatar: string | null;
-    userName: string | null;
-  } | null>(null);
+    userAvatar: string;
+    userName: string;
+  }>();
 
   useEffect(() => {
     async function fetchData() {
@@ -28,7 +29,15 @@ export default function Mypage() {
 
       <div id="profile-data" className="flex flex-col items-center gap-4">
         <div className="bg-gray-400 size-32 rounded-full flex justify-center items-center">
-          <img className="size-16" src={userData?.userAvatar ?? undefined} />
+          {userData?.userAvatar && (
+            <Image
+              alt="avatar"
+              className="size-16"
+              src={userData.userAvatar}
+              width={64}
+              height={64}
+            />
+          )}
         </div>
         <span className="font-bold text-xl">{userData?.userName}</span>
       </div>
@@ -48,17 +57,26 @@ export default function Mypage() {
         <div className="font-bold text-lg h-12 flex items-center">
           강의 관리
         </div>
-        <Link href="/mypage/upload-lecture" className="h-12 flex flex-row justify-between items-center">
+        <Link
+          href="/mypage/upload-lecture"
+          className="h-12 flex flex-row justify-between items-center"
+        >
           강의 업로드 <NextArrowIcon fill="black" />
         </Link>
-        <Link href="/" className="h-12 flex flex-row justify-between items-center">
+        <Link
+          href="/"
+          className="h-12 flex flex-row justify-between items-center"
+        >
           강의 관리 <NextArrowIcon fill="black" />
         </Link>
 
         <div className="font-bold text-lg h-12 flex items-center">
           수익 관리
         </div>
-        <Link href="/" className="h-12 flex flex-row justify-between items-center">
+        <Link
+          href="/"
+          className="h-12 flex flex-row justify-between items-center"
+        >
           수익 확인 <NextArrowIcon fill="black" />
         </Link>
       </div>
@@ -67,27 +85,42 @@ export default function Mypage() {
         <div className="font-bold text-lg h-12 flex items-center">
           결제 내역
         </div>
-        <Link href="/" className="h-12 flex flex-row justify-between items-center">
+        <Link
+          href="/"
+          className="h-12 flex flex-row justify-between items-center"
+        >
           결제 확인 <NextArrowIcon fill="black" />
         </Link>
 
         <div className="font-bold text-lg h-12 flex items-center">
           계정 정보
         </div>
-        <Link href="/" className="h-12 flex flex-row justify-between items-center">
+        <Link
+          href="/"
+          className="h-12 flex flex-row justify-between items-center"
+        >
           프로필 수정 <NextArrowIcon fill="black" />
         </Link>
-        <Link href="/" className="h-12 flex flex-row justify-between items-center">
+        <Link
+          href="/"
+          className="h-12 flex flex-row justify-between items-center"
+        >
           알림 설정 <NextArrowIcon fill="black" />
         </Link>
 
         <div className="font-bold text-lg h-12 flex items-center">
           계정 정보
         </div>
-        <Link href="/" className="h-12 flex flex-row justify-between items-center">
+        <Link
+          href="/"
+          className="h-12 flex flex-row justify-between items-center"
+        >
           고객 지원 <NextArrowIcon fill="black" />
         </Link>
-        <Link href="/" className="h-12 flex flex-row justify-between items-center">
+        <Link
+          href="/"
+          className="h-12 flex flex-row justify-between items-center"
+        >
           문의 하기 <NextArrowIcon fill="black" />
         </Link>
       </div>
