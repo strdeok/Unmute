@@ -1,12 +1,14 @@
 import Header from "@/app/_components/header";
 import VideoSection from "@/app/_components/videoSection";
 
-export default function Category({
-  params,
-}: {
-  params: { category: string };
-}) {
-  const { category } = params; 
+interface CategoryPageProps {
+  params: {
+    category: string;
+  };
+}
+
+export default function CategoryPage({ params }: CategoryPageProps) {
+  const { category } = params;
 
   return (
     <>
