@@ -126,6 +126,10 @@ export default function UploadLecturePage() {
   ) => {
     try {
       const user = await firebaseGetUserInfo();
+      if (!user?.uid) {
+        alert("로그인이 필요합니다.");
+        return;
+      }
 
       // 썸네일 먼저 업로드 → URL 반환
       const thumbnailUrl = await firebaseUploadThumbnail(thumbnailFile); // Storage에 미리 업로드
@@ -137,10 +141,10 @@ export default function UploadLecturePage() {
         price,
         level,
         thumbnailUrl,
-        instructorId: user?.uid!,
+        instructorId: user.uid,
         chapters,
       });
-    } catch (err) {
+    } catch (_) {
       alert("오류가 발생하였습니다. 다시 시도해주세요.");
     }
   };

@@ -13,7 +13,9 @@ export default function SideBarContents({
 }) {
   const [select, setSelect] = useState("");
   useEffect(() => {
-    isActiveSideBar && setSelect("");
+    if(isActiveSideBar){
+      setSelect("");
+    } 
   }, [isActiveSideBar]);
   return (
     <>

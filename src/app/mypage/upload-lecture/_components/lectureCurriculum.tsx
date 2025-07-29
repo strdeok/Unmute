@@ -22,7 +22,7 @@ export default function LectureCurriculum({
     cancel,
     progress,
     isUploading,
-    downloadURL, // Keep this if you use it for other immediate feedback
+    //downloadURL, // Keep this if you use it for other immediate feedback
   } = useUploadLectureVideo();
 
   const materialUploadMutation = useUploadLectureMaterial();

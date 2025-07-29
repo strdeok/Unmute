@@ -4,23 +4,20 @@ import {
   setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { app } from "../firebase";
 
 export default function firebaseSignInEmail(email: string, password: string) {
-  app;
   const auth = getAuth();
 
   setPersistence(auth, browserLocalPersistence).then(() => {
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
+      .then(() => { 
         if (auth.currentUser?.emailVerified === false) {
           alert("이메일 인증을 완료해주세요.");
           return;
         }
-        location.replace("/main");
+        location.replace("/");
       })
       .catch((error) => {
-        console.log(error.message);
         switch (error.message) {
           case "Firebase: Error (auth/invalid-credential).":
             alert("입력하신 정보가 올바르지 않습니다.");
