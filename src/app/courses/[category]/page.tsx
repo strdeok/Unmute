@@ -2,11 +2,11 @@ import Header from "@/app/_components/header";
 import VideoSection from "@/app/_components/videoSection";
 
 interface CategoryPageProps {
-  params: Promise<{ category: string }>;
+  params: { category: string }; // 여기를 수정했습니다!
 }
 
 export default async function CategoryPage(props: CategoryPageProps) {
-  const { category } = await props.params; 
+  const { category } = props.params; // await 제거
   return (
     <>
       <Header />
