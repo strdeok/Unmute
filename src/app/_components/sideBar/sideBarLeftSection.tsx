@@ -25,7 +25,7 @@ export default function SideBarLeftSection({
         전체보기
       </Link>
 
-      {["난이도별", "공인영어시험", "일상생활", "여행", "비즈니스"].map(
+      {["난이도별", "산업별", "상황별"].map(
         (name) => {
           return (
             <button

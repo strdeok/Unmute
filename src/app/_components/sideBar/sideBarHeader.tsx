@@ -1,12 +1,10 @@
+import { DocumentData } from "firebase/firestore";
 import Image from "next/image";
 
 export default function SideBarHeader({
   userData,
 }: {
-  userData: {
-    userAvatar: string | null;
-    userName: string | null;
-  } | null;
+  userData: DocumentData | null | undefined;
 }) {
   return (
     <div className="w-full h-16 flex justify-around items-center">
@@ -19,10 +17,13 @@ export default function SideBarHeader({
               width={24}
               height={24}
               alt="avatar"
-              src={userData?.userAvatar ?? ""}
+              src={
+                userData?.profileImage ||
+                "https://cdn-icons-png.flaticon.com/512/3106/3106921.png"
+              }
             />
           </div>
-          <span>{userData.userName}님 환영합니다.</span>
+          <span>{userData?.name}님 환영합니다.</span>
           <div />
         </>
       )}

@@ -5,37 +5,37 @@ export default function SideBarRightSection({ select }: { select: string }) {
     switch (select) {
       case "난이도별":
         return [
+          { label: "입문", value: "entry" },
           { label: "초급", value: "beginner" },
           { label: "중급", value: "intermediate" },
           { label: "고급", value: "advanced" },
+          { label: "최상급", value: "expert" },
         ];
-      case "공인영어시험":
+      case "상황별":
         return [
-          { label: "토익", value: "toeic" },
-          { label: "토플", value: "toefl" },
-          { label: "오픽", value: "opic" },
-          { label: "텝스", value: "teps" },
-        ];
-      case "일상생활":
-        return [
-          { label: "인사말", value: "greetings" },
-          { label: "식당", value: "restaurant" },
-          { label: "쇼핑", value: "shopping" },
-          { label: "날씨", value: "weather" },
-        ];
-      case "여행":
-        return [
-          { label: "공항", value: "airport" },
-          { label: "호텔", value: "hotel" },
-          { label: "길찾기", value: "directions" },
-          { label: "관광", value: "sightseeing" },
-        ];
-      case "비즈니스":
-        return [
-          { label: "회의", value: "meeting" },
-          { label: "이메일", value: "email" },
+          { label: "회의 진행", value: "meeting_leading" },
+          { label: "의견 제시", value: "expressing_opinions" },
           { label: "프레젠테이션", value: "presentation" },
-          { label: "전화응대", value: "call-handling" },
+          { label: "이메일 작성", value: "email_writing" },
+          { label: "전화 통화", value: "phone_call" },
+          { label: "협상 및 계약", value: "negotiation_contract" },
+          { label: "보고 및 요약", value: "reporting_summarizing" },
+          { label: "네트워킹", value: "networking" },
+          { label: "고객 응대", value: "customer_service" },
+          { label: "면접", value: "interview" },
+        ];
+      case "산업별":
+        return [
+          { label: "IT / 기술", value: "it_technology" },
+          { label: "금융 / 투자", value: "finance_investment" },
+          { label: "마케팅 / 광고", value: "marketing_advertising" },
+          { label: "영업 / 판매", value: "sales_commerce" },
+          { label: "인사 / HR", value: "human_resources" },
+          { label: "제조 / 생산", value: "manufacturing_production" },
+          { label: "의료 / 제약", value: "medical_pharmaceutical" },
+          { label: "교육", value: "education" },
+          { label: "서비스 / 요식업", value: "service_hospitality" },
+          { label: "미디어 / 엔터테인먼트", value: "media_entertainment" },
         ];
       default:
         return [];
