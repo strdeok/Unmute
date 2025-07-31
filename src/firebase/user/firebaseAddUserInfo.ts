@@ -12,9 +12,11 @@ export default async function firebaseAddUserInfo(
       name,
       email,
       phone,
-      type: "user",
+      role: "user",
       createdAt: new Date(),
-      img: "https://cdn-icons-png.flaticon.com/512/3106/3106921.png",
+      updatedAt: new Date(),
+      point: 0,
+      profileImage: "https://cdn-icons-png.flaticon.com/512/3106/3106921.png",
     });
     console.log("success");
   } catch (e) {
