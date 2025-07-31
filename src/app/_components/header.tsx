@@ -19,7 +19,7 @@ export default function Header() {
       const user = await firebaseGetUserInfo();
       if (!user) return;
       const userData = await firebaseGetUserData(user.uid);
-      setuserData({ userAvatar: userData?.img, userName: userData?.name });
+      setuserData({ userAvatar: userData?.profileImage, userName: userData?.name });
     }
     fetchData();
   }, []);
