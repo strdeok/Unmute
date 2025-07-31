@@ -1,3 +1,4 @@
+import { DocumentData } from "firebase/firestore";
 import DarkSide from "./darkSide";
 import SideBarContents from "./sideBarContents";
 import SideBarHeader from "./sideBarHeader";
@@ -10,10 +11,7 @@ export default function SideBar({
 }: {
   isActiveSideBar: boolean;
   setIsActiveSideBar: React.Dispatch<React.SetStateAction<boolean>>;
-  userData: {
-    userAvatar: string | null;
-    userName: string | null;
-  } | null;
+  userData: DocumentData | null | undefined;
 }) {
   return (
     <>
@@ -26,7 +24,10 @@ export default function SideBar({
         className="w-80 bg-white h-full rounded-r-xl fixed -left-full top-0 z-50 flex flex-col"
       >
         <SideBarHeader userData={userData} />
-        <SideBarContents isActiveSideBar={isActiveSideBar} setIsActiveSideBar={setIsActiveSideBar} />
+        <SideBarContents
+          isActiveSideBar={isActiveSideBar}
+          setIsActiveSideBar={setIsActiveSideBar}
+        />
       </motion.div>
 
       <DarkSide
