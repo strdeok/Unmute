@@ -12,6 +12,7 @@ import firebaseUploadThumbnail from "@/firebase/lecture/firebaseUploadThumbnail"
 import { useUploadLecture } from "@/hooks/useUploadLecture";
 import Loading from "@/app/loading";
 import Category from "./_components/category";
+import LectureDescription from "./_components/lectureDescription";
 
 export default function UploadLecturePage() {
   const router = useRouter();
@@ -145,7 +146,7 @@ export default function UploadLecturePage() {
         chapters,
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       alert("오류가 발생하였습니다. 다시 시도해주세요.");
     }
   };
@@ -204,11 +205,7 @@ export default function UploadLecturePage() {
 
           <div className="flex flex-col gap-2 py-3">
             <span className="font-semibold">강의 설명 *</span>
-            <textarea
-              name="description"
-              placeholder="강의에 대한 자세한 설명을 입력해주세요. 학습 목표, 대상, 특징을 포함하면 좋습니다."
-              className="border border-[#dddddd] rounded-lg px-2 py-1 text-sm"
-            />
+            <LectureDescription />
           </div>
 
           <div className="flex flex-col gap-2 py-3">
