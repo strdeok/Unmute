@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Loading from "./loading";
 import AppQueryClientProvider from "./queryClientProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "Unmute",
@@ -24,6 +25,7 @@ export default function RootLayout({
         <AppQueryClientProvider>
           <Suspense fallback={<Loading />}>{children}</Suspense>
           <BottomNavigation /> {/* 모바일에만 존재 */}
+          <Analytics />
         </AppQueryClientProvider>
       </body>
     </html>
