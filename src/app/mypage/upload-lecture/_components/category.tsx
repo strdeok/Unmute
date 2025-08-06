@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import DownIcon from "@/assets/down";
+import { CATEGORY_LIST } from "@/constants/CategoryList";
 
 export default function Category() {
   const [category, setCategory] = useState("");
@@ -33,16 +34,16 @@ export default function Category() {
           id="select-level"
           className="flex flex-col border border-[#dddddd] rounded-lg bg-white absolute w-full left-0 top-24 z-10"
         >
-          {["생", "각", "중"].map((name) => (
+          {CATEGORY_LIST.map((category) => (
             <button
               type="button"
-              key={name}
+              key={category.value}
               onClick={() => {
-                selectCategory(name);
+                selectCategory(category.label);
               }}
               className="hover:bg-gray-200 transition-all h-8"
             >
-              {name}
+              {category.label}
             </button>
           ))}
         </div>
