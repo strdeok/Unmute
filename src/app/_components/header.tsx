@@ -44,17 +44,16 @@ export default function Header() {
           <Image width={128} height={64} alt="logo" src="/logo.png" />
         </Link>
 
-        {userData === null ? ( // TODO: 따로 클라이언트 컴포넌트로 분리
+        {userData === null ? (
           <Link href="/login">로그인</Link>
         ) : (
-          <div className="size-12 bg-gray-300 flex items-center justify-center rounded-full">
+          <div className="relative size-12 border border-gray-300 flex items-center justify-center rounded-full overflow-hidden">
             <Image
-              width={24}
-              height={24}
+              fill
               alt="avatar"
               src={
                 userData?.profileImage ||
-                "https://cdn-icons-png.flaticon.com/512/3106/3106921.png"
+                "https://firebasestorage.googleapis.com/v0/b/unmute-c38ab.firebasestorage.app/o/userAvatar%2Fdefault-avatar.png?alt=media&token=9f0d0fca-05a6-418f-9e40-fdcff33d466c"
               }
             />
           </div>
