@@ -5,5 +5,6 @@ export interface ChapterType {
         videoFile: string | null;
         videoFileName: string | undefined
         materialFiles: string[]
+        duration: number
       }[];
 }
