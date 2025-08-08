@@ -10,7 +10,7 @@ export default function BottomNavigation() {
   const pathname = usePathname();
   if (pathname === "/mypage/upload-lecture") return;
   return (
-    <div className="fixed bottom-0 w-full bg-white flex flex-row items-center justify-between px-4 py-2.5 border-t border-[#F2F2F7]">
+    <div className="sm:hidden fixed bottom-0 w-full bg-white flex flex-row items-center justify-between px-4 py-2.5 border-t border-[#F2F2F7]">
       <Link
         key="main"
         href="/"

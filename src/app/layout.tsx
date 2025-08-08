@@ -25,6 +25,7 @@ export default function RootLayout({
         <AppQueryClientProvider>
           <Suspense fallback={<Loading />}>{children}</Suspense>
           <BottomNavigation /> {/* 모바일에만 존재 */}
+          <div className="h-24 sm:h-0" />
           <Analytics />
         </AppQueryClientProvider>
       </body>
