@@ -16,7 +16,7 @@ export default async function firebaseAddUserInfo(
       createdAt: new Date(),
       updatedAt: new Date(),
       point: 0,
-      profileImage: "https://cdn-icons-png.flaticon.com/512/3106/3106921.png",
+      profileImage: "https://firebasestorage.googleapis.com/v0/b/unmute-c38ab.firebasestorage.app/o/userAvatar%2Fdefault-avatar.png?alt=media&token=9f0d0fca-05a6-418f-9e40-fdcff33d466c",
     });
     console.log("success");
   } catch (e) {
