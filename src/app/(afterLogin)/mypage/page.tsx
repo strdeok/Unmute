@@ -71,7 +71,7 @@ export default function Mypage() {
               강의 업로드 <NextArrowIcon fill="black" />
             </Link>
             <Link
-              href="/"
+              href="/mypage/my-lecture"
               className="h-12 flex flex-row justify-between items-center"
             >
               강의 관리 <NextArrowIcon fill="black" />
