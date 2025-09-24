@@ -6,10 +6,11 @@ export default function SideBarHeader({
 }: {
   userData: DocumentData | null | undefined;
 }) {
+  console.log(userData);
   return (
     <div className="w-full h-16 flex justify-around items-center">
-      {userData === null ? (
-        <span>로그인해주세요.</span>
+      {!userData ? (
+        <span>로그인해주세요</span>
       ) : (
         <>
           <div className="size-11 border border-gray-300 flex items-center justify-center rounded-full">

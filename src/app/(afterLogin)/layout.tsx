@@ -10,7 +10,6 @@ export default function AfterLoginLayout({
     <>
       <Header />
       {children}
-      <div className="h-24 sm:h-0" />
       <BottomNavigation /> {/* 모바일에만 존재 */}
     </>
   );

@@ -8,6 +8,7 @@ import useGetUserData from "@/hooks/useGetUserData";
 import Image from "next/image";
 import Loading from "../../loading";
 import LectureRow from "./_components/lectureRow";
+import Link from "next/link";
 
 export default function Mycourses() {
   const { data: user } = useGetUserInfo();
@@ -32,6 +33,8 @@ export default function Mycourses() {
           <div className="relative size-32 overflow-hidden rounded-full flex justify-center items-center border border-gray-200">
             {userInfoLoading ? (
               <div className="relative rounded-full size-32 bg-gray-300 animate-pulse" />
+            ) : !userInfoData ? (
+              <Link href="/login">로그인</Link>
             ) : (
               <Image
                 src={
@@ -50,19 +53,21 @@ export default function Mycourses() {
         <section className="mt-12">
           <span className="font-semibold text-xl">내 강의</span>
 
-          <div className="flex flex-col gap-8 mt-8">
-            {lectureLoading ? (
-              <Loading />
-            ) : (
-              lectures?.map((item, index) => (
-                <>
-                  <div key={item?.id || index}>
-                    <LectureRow lecture={item as LectureType} />
-                  </div>
-                </>
-              ))
-            )}
-          </div>
+          {userInfoData && (
+            <div className="flex flex-col gap-8 mt-8">
+              {lectureLoading ? (
+                <Loading />
+              ) : (
+                lectures?.map((item, index) => (
+                  <>
+                    <div key={item?.id || index}>
+                      <LectureRow lecture={item as LectureType} />
+                    </div>
+                  </>
+                ))
+              )}
+            </div>
+          )}
         </section>
       </div>
     </>

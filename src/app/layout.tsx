@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body>
         <main className="relative m-auto w-96 h-full pb-16 overflow-x-hidden hide-scrollbar">
           <AppQueryClientProvider>
