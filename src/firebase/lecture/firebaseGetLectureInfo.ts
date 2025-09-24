@@ -1,39 +1,68 @@
+import { LectureType, LectureWithChapters } from "@/type/lecture";
+import { VideoType } from "@/type/video";
 import {
   collection,
   getDocs,
-  limit,
   query,
-  startAfter,
+  Timestamp,
+  where,
+  DocumentData,
 } from "firebase/firestore";
 import { db } from "../firebase";
 
-export default async function firebaseGetLectureInfo(
-  pageSize: number,
-  offset: number = 0
-) {
-  const docRef = collection(db, "lectures");
+type SerializableValue =
+  | null
+  | string
+  | number
+  | boolean
+  | Timestamp
+  | SerializableValue[]
+  | { [key: string]: SerializableValue };
 
-  let q;
-  let lastDoc = null;
-
-  if (offset === 0) {
-    // 첫 페이지
-    q = query(docRef, limit(pageSize));
-  } else {
-    // 앞쪽 문서들을 offset 수만큼 가져옴 (커서 위치 찾기용)
-    const previousDocsSnap = await getDocs(query(docRef, limit(offset)));
-    lastDoc = previousDocsSnap.docs[previousDocsSnap.docs.length - 1];
-
-    // 커서 이후에서 pageSize만큼 가져오기
-    q = query(docRef, startAfter(lastDoc), limit(pageSize));
+function serializeValue(value: SerializableValue): SerializableValue {
+  if (value instanceof Timestamp) {
+    return { seconds: value.seconds, nanoseconds: value.nanoseconds };
+  }
+  if (Array.isArray(value)) {
+    return value.map((v) => serializeValue(v));
   }
 
-  const docSnap = await getDocs(q);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([k, v]) => [k, serializeValue(v)])
+    );
+  }
+  return value;
+}
+
+export default async function firebaseGetLectureInfo(
+  id: string
+): Promise<LectureWithChapters | null> {
+  const lecturesRef = collection(db, "lectures");
+  const q = query(lecturesRef, where("id", "==", id));
+
+  const lectureInfos = await getDocs(q);
+
+  if (lectureInfos.empty) {
+    return null;
+  }
+
+  const lectureDoc = lectureInfos.docs[0];
+
+  const chaptersSnapshot = await getDocs(
+    collection(lectureDoc.ref, "chapters")
+  );
+
+  const chaptersData = chaptersSnapshot.docs.map(
+    (doc) => serializeValue(doc.data() as DocumentData) as unknown as VideoType
+  );
+
+  const lectureData = serializeValue(
+    lectureDoc.data() as DocumentData
+  ) as unknown as LectureType;
 
   return {
-    data: docSnap.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })),
+    ...lectureData,
+    chapters: chaptersData,
   };
 }

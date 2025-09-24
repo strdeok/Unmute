@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import BottomNavigation from "./_components/bottomNavigation";
 import type { Metadata } from "next";
 import "./globals.css";
 import Loading from "./loading";
@@ -21,13 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="sm:w-96">
-        <AppQueryClientProvider>
-          <Suspense fallback={<Loading />}>{children}</Suspense>
-          <BottomNavigation /> {/* 모바일에만 존재 */}
-          <div className="h-24 sm:h-0" />
-          <Analytics />
-        </AppQueryClientProvider>
+      <body>
+        <main className="relative m-auto w-96 h-full pb-16 overflow-x-hidden hide-scrollbar">
+          <AppQueryClientProvider>
+            <Suspense fallback={<Loading />}>{children}</Suspense>
+            <Analytics />
+          </AppQueryClientProvider>
+        </main>
       </body>
     </html>
   );

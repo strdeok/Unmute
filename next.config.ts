@@ -1,9 +1,10 @@
+import { withNextVideo } from "next-video/process";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["cdn-icons-png.flaticon.com", "firebasestorage.googleapis.com"],
+    domains: ["firebasestorage.googleapis.com"],
   },
 };
 
-export default nextConfig;
+export default withNextVideo(nextConfig);

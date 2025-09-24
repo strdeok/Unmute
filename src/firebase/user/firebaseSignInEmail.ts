@@ -4,13 +4,14 @@ import {
   setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { app } from "../firebase";
 
 export default function firebaseSignInEmail(email: string, password: string) {
-  const auth = getAuth();
+  const auth = getAuth(app);
 
   setPersistence(auth, browserLocalPersistence).then(() => {
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => { 
+      .then(() => {
         if (auth.currentUser?.emailVerified === false) {
           alert("이메일 인증을 완료해주세요.");
           return;

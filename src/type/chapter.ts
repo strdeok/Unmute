@@ -1,10 +1,13 @@
 export interface ChapterType {
-     title: string;
-      lectures: {
-        title: string;
-        videoFile: string | null;
-        videoFileName: string | undefined
-        materialFiles: string[]
-        duration: number
-      }[];
+  lectures: {
+    materialUrl: string;
+    order: number;
+    title: string;
+    videoUrl: string;
+    id: string;
+    duration: number; 
+  }[];
+  title: string;
+  order: number;
+  id: string;
 }

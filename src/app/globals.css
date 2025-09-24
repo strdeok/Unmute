@@ -19,15 +19,38 @@ body {
   box-sizing: border-box;
 }
 
-li {
-  list-style: none;
-  margin-left: 1rem;
-}
-
 button:hover {
   cursor: pointer;
 }
 
 .btn-sidebar {
   @apply w-full h-10 border border-[#E5E5EA];
+}
+
+.flex-center {
+  @apply flex flex-row items-center justify-center;
+}
+
+:root {
+  --main-color: #f5af3e;
+}
+
+.bg-main {
+  background-color: var(--main-color);
+}
+
+.text-main {
+  color: var(--main-color);
+}
+
+li {
+  list-style: none;
+}
+
+.hide-scrollbar {
+  overflow: auto; /* 스크롤은 가능하지만 스크롤바는 숨김 */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* 스크롤바 숨기기 */
 }

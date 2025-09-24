@@ -1,4 +1,3 @@
-// firebase/firebaseDeleteLectureVideo.ts
 import { getStorage, ref, deleteObject } from "firebase/storage";
 
 export default async function firebaseDeleteMaterialFile(file: string) {

@@ -1,3 +1,5 @@
+import { VideoType } from "./video";
+
 export interface LectureType {
   id: string;
   title: string;
@@ -17,4 +19,8 @@ export interface LectureType {
     seconds: number;
     type: string;
   };
+}
+
+export interface LectureWithChapters extends LectureType {
+  chapters: VideoType[];
 }

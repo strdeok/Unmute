@@ -1,37 +1,19 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../firebase";
 
-// 시청 기록 저장 (시간 누적 방식)
 export async function updateWatchHistory(
   userId: string,
   lectureId: string,
-  watchedTime: number
+  lessonId: string
 ) {
-  const historyRef = doc(db, `watchHistories/${userId}/${lectureId}`);
+  const purchaseDocRef = doc(db, "profile", userId, "purchases", lectureId);
 
-  await setDoc(
-    historyRef,
-    {
-      watchedTime,
-      updatedAt: new Date(),
-    },
-    { merge: true }
-  );
-}
+  await updateDoc(purchaseDocRef, {
+    // 1. watchedList 필드에 arrayUnion을 사용하여 lessonId를 추가합니다.
+    // arrayUnion은 배열에 해당 값이 없을 때만 추가해주므로 중복이 방지됩니다.
+    watchedList: arrayUnion(lessonId),
 
-// 사용자별 특정 강의의 시청 기록 가져오기
-export async function getWatchHistory(userId: string, lectureId: string) {
-  // 시청 기록 도큐먼트 참조 생성
-  const historyRef = doc(db, `watchHistories/${userId}/${lectureId}`);
-
-  // 해당 도큐먼트 가져오기
-  const snapshot = await getDoc(historyRef);
-
-  // 존재 여부에 따라 결과 반환
-  if (!snapshot.exists()) return null;
-
-  return {
-    id: snapshot.id,
-    ...snapshot.data(),
-  };
+    // 2. recentWatched 필드는 가장 최근 lessonId로 덮어씁니다.
+    recentWatched: lessonId,
+  });
 }
