@@ -5,7 +5,7 @@ export function useUploadLecture() {
   return useMutation({
     mutationFn: firebaseUploadLectureInfo,
     onSuccess: () => {
-      location.replace("/mypage/manage-lecture")
+      location.replace("/mypage/my-lecture")
     },
     onError: (err)=>{
       console.log(err)

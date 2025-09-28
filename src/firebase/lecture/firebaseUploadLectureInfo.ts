@@ -14,6 +14,7 @@ export default async function firebaseUploadLectureInfo({
   thumbnailUrl,
   instructorName,
   chapters,
+  instructorId,
 }: {
   title: string;
   description: string;
@@ -23,11 +24,11 @@ export default async function firebaseUploadLectureInfo({
   thumbnailUrl: string;
   instructorName: string;
   chapters: ChapterType[];
+  instructorId: string;
 }) {
   const totalDurationInSeconds = chapters
     .flatMap((chapter) => chapter.lectures)
     .reduce((total, lecture) => total + (lecture.duration || 0), 0);
-
 
   const categoryItem = CATEGORY_LIST.find((item) => item.value === category);
   const categoryLabel = categoryItem ? categoryItem.label : category;
@@ -46,6 +47,7 @@ export default async function firebaseUploadLectureInfo({
     level: levelLabel,
     thumbnailUrl,
     instructorName,
+    instructorId,
     isPublished: false,
     rating: 0,
     ratingCount: 0,

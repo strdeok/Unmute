@@ -3,7 +3,6 @@
 import { ChapterType } from "@/type/chapter";
 import FileUploadIcon from "@/assets/fileUpload";
 import TrashbinIcon from "@/assets/trashbin";
-// import { useDeleteLectureVideo } from "@/hooks/useDeleteLectureVideo"; // REMOVED: 비디오 훅 제거
 import { useDeleteMaterialFile } from "@/hooks/useDeleteMaterialFile";
 import { useUploadLectureMaterial } from "@/hooks/useUploadLectureMaterial";
 import { useState } from "react";
@@ -20,14 +19,14 @@ export default function LectureCurriculum({
     lectureIdx: number;
   } | null>(null);
 
-  // --- React Query Hooks ---
-
-  const { mutate: uploadMaterial, isPending: isUploadingMaterial, isSuccess: isSuccessUploadedMaterial } =
-    useUploadLectureMaterial();
+  const {
+    mutate: uploadMaterial,
+    isPending: isUploadingMaterial,
+    isSuccess: isSuccessUploadedMaterial,
+  } = useUploadLectureMaterial();
 
   const { mutate: deleteMaterial } = useDeleteMaterialFile();
 
-  // --- Handler Functions ---
   const addLecture = (chapterIndex: number) => {
     const updated = [...chapters];
     updated[chapterIndex].lectures.push({
@@ -74,7 +73,6 @@ export default function LectureCurriculum({
     setChapters(updated);
   };
 
-  // CHANGED: 비디오 업로드 핸들러 원복
   const handleVideoUpload = (
     chapterIdx: number,
     lectureIdx: number,
@@ -102,7 +100,6 @@ export default function LectureCurriculum({
     });
   };
 
-  // CHANGED: 비디오 삭제 핸들러 원복
   const handleDeleteVideo = (chapterIdx: number, lectureIdx: number) => {
     const updated = [...chapters];
     updated[chapterIdx].lectures[lectureIdx].videoUrl = "";
@@ -133,7 +130,7 @@ export default function LectureCurriculum({
         강의의 세부 내용과 각 챕터별 자료를 등록해주세요.
       </h4>
 
-      {chapters.map((chapter, chapterIdx) => (
+      {chapters?.map((chapter, chapterIdx) => (
         <div
           key={chapterIdx}
           className="border border-[#ccc] rounded p-4 flex flex-col gap-3 relative"
@@ -192,7 +189,6 @@ export default function LectureCurriculum({
                 }}
               />
 
-              {/* 영상 업로드 */}
               <label
                 htmlFor={`video-${chapterIdx}-${lectureIdx}`}
                 className="cursor-pointer font-medium"
@@ -205,10 +201,9 @@ export default function LectureCurriculum({
                   className="border border-[#DDDDDD] rounded px-2 py-1 text-sm w-full"
                   id={`video-${chapterIdx}-${lectureIdx}`}
                   type="text"
-                  value={lecture.videoUrl} // value prop 추가
+                  value={lecture.videoUrl}
                   onChange={(e) => handleVideoUpload(chapterIdx, lectureIdx, e)}
                 />
-                {/* 비디오 URL이 있을 때 삭제 버튼 표시. handleVideoDelete는 원본 로직을 따릅니다. */}
                 {lecture.videoUrl && (
                   <button
                     type="button"
@@ -221,7 +216,6 @@ export default function LectureCurriculum({
                 )}
               </div>
 
-              {/* 자료 업로드 */}
               <label
                 htmlFor={`material-${chapterIdx}-${lectureIdx}`}
                 className="cursor-pointer border border-dashed border-[#dddddd] rounded-lg p-4 text-sm text-[#A6A6A6] flex flex-col items-center justify-center text-center"

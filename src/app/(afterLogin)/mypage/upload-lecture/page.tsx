@@ -4,7 +4,7 @@ import FileUpload from "@/assets/fileUpload";
 import SelectLevel from "./_components/selectLevel";
 import LectureCurriculum from "./_components/lectureCurriculum";
 import PrevArrowIcon from "@/assets/prevArrow";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChapterType } from "@/type/chapter";
 import firebaseGetUserInfo from "@/firebase/user/firebaseGetUserInfo";
@@ -14,12 +14,25 @@ import Loading from "@/app/loading";
 import Category from "./_components/category";
 import LectureDescription from "./_components/lectureDescription";
 import useGetUserData from "@/hooks/useGetUserData";
+import InfoIcon from "@/assets/info";
+import { useGetLecturewithId, useModifyLecture } from "@/hooks/useLecture";
+import { LectureWithChapters } from "@/type/lecture";
 
 export default function UploadLecturePage() {
   const router = useRouter();
   const [userUid, setUserUid] = useState<string | null>(null);
-  const { data } = useGetUserData(userUid || "");
-  const userData = data?.data();
+  const { data: userDataSnapshot } = useGetUserData(userUid || "");
+  const userData = userDataSnapshot?.data();
+
+  const [initialData, setInitialData] = useState({
+    title: "",
+    description: "",
+    price: 0,
+    category: "",
+    level: "",
+    thumbnailUrl: "",
+  });
+
   const [chapters, setChapters] = useState<ChapterType[]>([
     {
       title: "",
@@ -38,6 +51,32 @@ export default function UploadLecturePage() {
     },
   ]);
   const [thumbnailName, setThumbnailName] = useState("");
+  const [priceAlert, setPriceAlert] = useState(false);
+
+  const searchParams = useSearchParams();
+  const isModify = !!searchParams.get("lectureId");
+
+  const { data: lectureData, isLoading: isLectureLoading } =
+    useGetLecturewithId(searchParams.get("lectureId") as string);
+
+  const { mutate: uploadLecture, isPending: isUploading } = useUploadLecture();
+  const { mutate: modifyLecture, isPending: isModifying } = useModifyLecture();
+
+  useEffect(() => {
+    const existingLecture = lectureData as LectureWithChapters;
+    if (isModify && lectureData) {
+      setInitialData({
+        title: existingLecture.title,
+        description: existingLecture.description,
+        price: existingLecture.price,
+        category: existingLecture.category,
+        level: existingLecture.level,
+        thumbnailUrl: existingLecture.thumbnailUrl,
+      });
+      setChapters(existingLecture.chapters);
+      setThumbnailName(existingLecture.thumbnailUrl);
+    }
+  }, [isModify, lectureData]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -48,8 +87,6 @@ export default function UploadLecturePage() {
     };
     fetchUser();
   }, []);
-
-  const { mutate: uploadLecture, isPending } = useUploadLecture();
 
   const checkForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,73 +99,21 @@ export default function UploadLecturePage() {
     const level = formData.get("level") as string;
     const thumbnail = formData.get("thumbnail") as File;
 
-    // === 유효성 검사 ===
-    if (!title || title.trim() === "") {
-      alert("강의 제목을 입력해주세요.");
-      return;
-    }
-
-    if (!description || description.trim() === "") {
-      alert("강의 설명을 입력해주세요.");
-      return;
-    }
-
-    if (isNaN(price) || price < 0) {
-      alert("가격은 0원 이상으로 입력해주세요.");
-      return;
-    }
-
-    if (!level) {
-      alert("강의 수준을 선택해주세요.");
-      return;
-    }
-
-    if (!category) {
-      alert("카테고리를 입력해주세요.");
-      return;
-    }
-
-    if (!thumbnail || thumbnail.size === 0) {
+    if (!isModify && (!thumbnail || thumbnail.size === 0)) {
       alert("썸네일 이미지를 업로드해주세요.");
       return;
     }
 
-    const validTypes = ["image/jpeg", "image/png"];
-    if (!validTypes.includes(thumbnail.type)) {
-      alert("썸네일은 JPG 또는 PNG 형식만 지원됩니다.");
-      return;
-    }
-
-    if (thumbnail.size > 5 * 1024 * 1024) {
-      alert("썸네일 파일 크기는 최대 5MB까지 가능합니다.");
-      return;
-    }
-
-    // === 챕터 및 강의 유효성 검사 ===
-    for (const [chapterIdx, chapter] of chapters.entries()) {
-      if (!chapter.title.trim()) {
-        alert(`챕터 ${chapterIdx + 1}의 제목을 입력해주세요.`);
+    if (thumbnail && thumbnail.size > 0) {
+      const validTypes = ["image/jpeg", "image/png"];
+      if (!validTypes.includes(thumbnail.type)) {
+        alert("썸네일은 JPG 또는 PNG 형식만 지원됩니다.");
         return;
       }
 
-      for (const [lectureIdx, lecture] of chapter.lectures.entries()) {
-        if (!lecture.title.trim()) {
-          alert(
-            `챕터 ${chapterIdx + 1} - 강의 ${
-              lectureIdx + 1
-            }의 제목을 입력해주세요.`
-          );
-          return;
-        }
-
-        if (!lecture.videoUrl) {
-          alert(
-            `챕터 ${chapterIdx + 1} - 강의 ${
-              lectureIdx + 1
-            }의 영상 링크를 업로드해주세요.`
-          );
-          return;
-        }
+      if (thumbnail.size > 5 * 1024 * 1024) {
+        alert("썸네일 파일 크기는 최대 5MB까지 가능합니다.");
+        return;
       }
     }
 
@@ -144,20 +129,40 @@ export default function UploadLecturePage() {
     thumbnailFile: File
   ) => {
     try {
-      if (!userData) return;
+      let finalThumbnailUrl = initialData.thumbnailUrl;
 
-      const thumbnailUrl = await firebaseUploadThumbnail(thumbnailFile); // Storage에 미리 업로드
+      if (thumbnailFile && thumbnailFile.size > 0) {
+        finalThumbnailUrl = await firebaseUploadThumbnail(thumbnailFile);
+      }
 
-      uploadLecture({
+      const updatableData = {
         title,
         description,
         category,
         price,
         level,
-        thumbnailUrl,
-        instructorName: userData.name,
+        thumbnailUrl: finalThumbnailUrl,
         chapters,
-      });
+      };
+
+      if (isModify) {
+        modifyLecture({
+          lectureId: searchParams.get("lectureId") as string,
+          updatedData: updatableData,
+        });
+      } else {
+        if (!userData?.uid || !userData?.name) {
+          alert("강사 정보가 올바르지 않습니다. 잠시 후 다시 시도해주세요.");
+          return;
+        }
+
+        const newLecturePayload = {
+          ...updatableData,
+          instructorName: userData.name,
+          instructorId: userData.uid,
+        };
+        uploadLecture(newLecturePayload);
+      }
     } catch (error) {
       console.log(error);
       alert("오류가 발생하였습니다. 다시 시도해주세요.");
@@ -166,10 +171,13 @@ export default function UploadLecturePage() {
 
   const uploadThumbnail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setThumbnailName(file!.name);
+    if (file) {
+      setThumbnailName(file.name);
+    }
   };
 
-  if (isPending) {
+  const isPending = isUploading || isModifying;
+  if (isPending || (isModify && isLectureLoading)) {
     return <Loading />;
   }
 
@@ -180,23 +188,23 @@ export default function UploadLecturePage() {
           <PrevArrowIcon />
         </button>
         <span className="font-bold text-lg flex-1/3 text-center">
-          강의 업로드
+          {isModify ? "강의 수정" : "강의 업로드"}
         </span>
         <div className="flex-1/3" />
       </div>
 
       <div className="m-3">
-        <h1 className="font-bold text-2xl">새 강의 등록</h1>
+        <h1 className="font-bold text-2xl">
+          {isModify ? "강의 수정" : "새 강의 등록"}
+        </h1>
         <h2 className="text-[#757575]">
-          학습자에게 전달할 새 강의를 등록하세요.
+          {isModify
+            ? "강의 정보를 수정하세요."
+            : "학습자에게 전달할 새 강의를 등록하세요."}
         </h2>
       </div>
 
-      <form
-        onSubmit={(e) => {
-          checkForm(e);
-        }}
-      >
+      <form onSubmit={checkForm}>
         <div
           id="lecture-info"
           className="border border-[#DDDDDD] rounded-lg m-3 px-4 py-2 flex flex-col gap-2"
@@ -213,39 +221,66 @@ export default function UploadLecturePage() {
               type="text"
               placeholder="강의 제목을 입력해주세요."
               className="border border-[#dddddd] rounded-lg px-2 py-1 text-sm"
+              defaultValue={initialData.title}
+              key={initialData.title}
             />
           </div>
 
           <div className="flex flex-col gap-2 py-3">
             <span className="font-semibold">강의 설명 *</span>
-            <LectureDescription />
+            <LectureDescription
+              defaultValue={initialData.description}
+              key={initialData.description}
+            />
           </div>
 
           <div className="flex flex-col gap-2 py-3">
             <span className="font-semibold">강의 가격 (원) *</span>
-            <input
-              type="number"
-              name="price"
-              placeholder="강의 가격을 입력해주세요. (무료는 0원으로 표기)"
-              className="border border-[#dddddd] rounded-lg px-2 py-1 text-sm"
-            />
+            <div className="relative ">
+              <input
+                type="number"
+                name="price"
+                placeholder="강의 가격을 입력해주세요. (무료는 0원으로 표기)"
+                className="border border-[#dddddd] rounded-lg px-2 py-1 text-sm w-full text-gray-500"
+                disabled={true}
+                defaultValue={initialData.price}
+                key={initialData.price}
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-1/2 -translate-y-1/2"
+                onClick={() => setPriceAlert((prev) => !prev)}
+              >
+                <InfoIcon />
+              </button>
+            </div>
+            {priceAlert && (
+              <span className="text-red-500 text-sm">
+                현재는 무료로만 강의를 등록할 수 있습니다
+              </span>
+            )}
           </div>
 
-          <Category />
-
-          <SelectLevel />
+          <Category
+            defaultValue={initialData.category}
+            key={`cat-${initialData.category}`}
+          />
+          <SelectLevel
+            defaultValue={initialData.level}
+            key={`lvl-${initialData.level}`}
+          />
 
           <div className="flex flex-col gap-2 py-3">
             <span className="font-semibold">강의 썸네일 *</span>
-
             <label
               htmlFor="file-upload"
-              className="border border-[#dddddd] rounded-lg
-            p-2 text-[#A6A6A6] flex flex-col items-center"
+              className="border border-[#dddddd] rounded-lg p-2 text-[#A6A6A6] flex flex-col items-center cursor-pointer"
             >
               <FileUpload />
               {thumbnailName ? (
-                <div className="w-full text-sm overflow-ellipsis truncate">{thumbnailName}</div>
+                <div className="w-full text-sm overflow-ellipsis truncate text-center text-black">
+                  {thumbnailName}
+                </div>
               ) : (
                 <>
                   <p>클릭하여 강의 썸네일을 업로드해주세요.</p>
@@ -258,9 +293,7 @@ export default function UploadLecturePage() {
               id="file-upload"
               type="file"
               className="hidden"
-              onChange={(e) => {
-                uploadThumbnail(e);
-              }}
+              onChange={uploadThumbnail}
             />
           </div>
         </div>
@@ -269,17 +302,14 @@ export default function UploadLecturePage() {
 
         <div id="save-part" className="w-full flex flex-row justify-end">
           <button
-            disabled={isPending}
-            className="py-2 px-4 border rounded-lg mr-4 border-[#dddddd]"
-          >
-            임시저장
-          </button>
-          <button
             type="submit"
-            className="py-2 px-4 rounded-lg mr-4 text-white bg-[#007AFF]"
-            disabled={isPending}
+            className={
+              "py-2 px-4 rounded-lg mr-4 text-white bg-[#007AFF] transition-colors " +
+              ((isPending || !userData) && "bg-[#dcdcdc] cursor-not-allowed")
+            }
+            disabled={isPending || !userData}
           >
-            강의등록
+            {isModify ? "강의 수정" : "강의 등록"}
           </button>
         </div>
       </form>

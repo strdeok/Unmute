@@ -3,12 +3,22 @@ import { useState } from "react";
 import DownIcon from "@/assets/down";
 import { LEVEL_LIST } from "@/constants/LevelList";
 
-export default function SelectLevel() {
-  const [level, setLevel] = useState("");
+export default function SelectLevel({
+  defaultValue,
+}: {
+  defaultValue?: string;
+}) {
+  const defaultLevel = LEVEL_LIST.find((level) => level.value === defaultValue)?.value;
+  const [selectedValue, setSelectedValue] = useState(defaultLevel || "");
+
+  const selectedLabel =
+    LEVEL_LIST.find((level) => level.value === selectedValue)?.label ||
+    "난이도를 선택해주세요.";
+
   const [isDropDownActive, setDropDownActive] = useState(false);
 
-  const selectLevel = (level: string) => {
-    setLevel(level);
+  const selectLevel = (value: string) => {
+    setSelectedValue(value);
     setDropDownActive(false);
   };
 
@@ -16,8 +26,7 @@ export default function SelectLevel() {
     <div className="relative flex flex-col gap-2 py-3">
       <span className="font-semibold">난이도 *</span>
 
-      {/* 폼 전송용 히든 인풋 */}
-      <input type="hidden" name="level" value={level} />
+      <input type="hidden" name="level" value={selectedValue} />
 
       <button
         type="button"
@@ -26,7 +35,7 @@ export default function SelectLevel() {
         }}
         className="flex flex-row justify-between border border-[#dddddd] rounded-lg p-2"
       >
-        {level === "" ? "난이도를 선택해주세요." : level} <DownIcon />
+        {selectedLabel} <DownIcon />
       </button>
 
       {isDropDownActive && (
@@ -39,7 +48,7 @@ export default function SelectLevel() {
               type="button"
               key={level.value}
               onClick={() => {
-                selectLevel(level.label);
+                selectLevel(level.value);
               }}
               className="hover:bg-gray-200 transition-all h-8"
             >

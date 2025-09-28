@@ -77,7 +77,7 @@ export default function Mypage() {
               강의 관리 <NextArrowIcon fill="black" />
             </Link>
 
-            <div className="font-bold text-lg h-12 flex items-center">
+            {/* <div className="font-bold text-lg h-12 flex items-center">
               수익 관리
             </div>
             <Link
@@ -85,7 +85,7 @@ export default function Mypage() {
               className="h-12 flex flex-row justify-between items-center"
             >
               수익 확인 <NextArrowIcon fill="black" />
-            </Link>
+            </Link> */}
           </div>
         ))}
 

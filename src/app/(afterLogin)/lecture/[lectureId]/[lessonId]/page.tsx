@@ -17,7 +17,7 @@ export default async function WatchPage({
   }
 
   return (
-    <div className="h-full flex flex-col pb-8 bg-gray-50">
+    <div className="h-auto  h-min-full flex flex-col pb-8 bg-gray-50">
       <VideoWrapper videoLink={lessonInfo.videoUrl} />
       <MaterialWrapper lectureId={lectureId} lessonId={lessonId} />
     </div>

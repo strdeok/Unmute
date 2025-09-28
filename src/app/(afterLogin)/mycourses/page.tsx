@@ -3,7 +3,7 @@
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { useGetLectureswithIds } from "@/hooks/useLecture";
 import { useMyLecture } from "@/hooks/useMylecture";
-import { LectureType } from "@/type/lecture";
+import { LectureType, LectureWithChapters } from "@/type/lecture";
 import useGetUserData from "@/hooks/useGetUserData";
 import Image from "next/image";
 import Loading from "../../loading";
@@ -22,7 +22,7 @@ export default function Mycourses() {
   const lectureQueries = useGetLectureswithIds(lectureIds || []);
   const lectures = lectureQueries
     .filter((query) => query.isSuccess && query.data)
-    .map((query) => query.data);
+    .map((query) => query.data) as LectureWithChapters[];
 
   const userInfoData = userInfo?.data();
 

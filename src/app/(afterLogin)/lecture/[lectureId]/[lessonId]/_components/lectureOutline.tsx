@@ -18,7 +18,10 @@ export default function LectureOutline({
 }) {
   const [openChapter, setOpenChapter] = useState<string | null>(null);
 
-  function findLectureById(lectureInfo: LectureWithChapters | undefined | null, lessonId: string) {
+  function findLectureById(
+    lectureInfo: LectureWithChapters | undefined | null,
+    lessonId: string
+  ) {
     for (const chapter of lectureInfo?.chapters || []) {
       const lecture = chapter.lectures.find(
         (lec: { id: string }) => lec.id === lessonId
@@ -35,8 +38,9 @@ export default function LectureOutline({
 
   const lecture = findLectureById(lectureInfo, lessonId);
 
-  const toggleChapter = (chapterId: string) => {
-    setOpenChapter((prev) => (prev === chapterId ? null : chapterId));
+  const toggleChapter = (chapterTitle: string) => {
+    console.log(chapterTitle);
+    setOpenChapter((prev) => (prev === chapterTitle ? null : chapterTitle));
   };
 
   return (
@@ -46,7 +50,7 @@ export default function LectureOutline({
         <span className="font-medium text-gray-600">
           {lecture?.chapterTitle}
         </span>
-        {lecture?.materialUrl?.length && lecture?.materialUrl.length > 0 && (
+        {lecture?.materialUrl?.length && lecture?.materialUrl.length > 0 ? (
           <Link
             href={lecture.materialUrl[0]}
             className="font-medium text-[#6F6F6F] flex items-center gap-px"
@@ -54,7 +58,7 @@ export default function LectureOutline({
             <FileDownload size={20} fill="#6F6F6F" />
             학습자료
           </Link>
-        )}
+        ) : null}
       </div>
 
       <ul className="mt-4 rounded-2xl shadow-md bg-white">
@@ -63,12 +67,12 @@ export default function LectureOutline({
         {lectureInfo?.chapters.map((chapter) => (
           <li key={chapter.id} className="mt-2">
             <button
-              onClick={() => toggleChapter(chapter.id)}
+              onClick={() => toggleChapter(chapter.title)}
               className="font-semibold w-full text-xl flex flex-row justify-between items-center px-4 py-2 pb-4"
             >
               <div className="truncate">{chapter.title}</div>
               <motion.div
-                animate={{ rotate: openChapter === chapter.id ? 180 : 0 }}
+                animate={{ rotate: openChapter === chapter.title ? 180 : 0 }}
                 transition={{ duration: 0.2 }}
               >
                 <Down />
@@ -76,7 +80,7 @@ export default function LectureOutline({
             </button>
 
             <AnimatePresence initial={false}>
-              {openChapter === chapter.id && (
+              {openChapter === chapter.title && (
                 <motion.div
                   key="content"
                   initial={{ height: 0, opacity: 0 }}

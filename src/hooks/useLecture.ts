@@ -1,6 +1,13 @@
 import firebaseGetLectureInfo from "@/firebase/lecture/firebaseGetLectureInfo";
 import { firebaseGetLecturewithId } from "@/firebase/lecture/firebaseGetLecturewithId";
-import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { firebaseModifyLecture } from "@/firebase/lecture/firebaseModifyLecture";
+import { ChapterType } from "@/type/chapter";
+import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const useClientFetchLectureInfo = (lectureId: string) => {
   const queryClient = useQueryClient();
@@ -37,5 +44,29 @@ export const useGetLectureswithIds = (lectureIds: string[]) => {
       staleTime: 1000 * 60 * 10,
       gcTime: 1000 * 60 * 30,
     })),
+  });
+};
+
+export const useModifyLecture = () => {
+  return useMutation({
+    mutationKey: ["modifyLecture"],
+    mutationFn: (variables: {
+      lectureId: string;
+      updatedData: {
+        title: string;
+        description: string;
+        category: string;
+        price: number;
+        level: string;
+        thumbnailUrl: string;
+        chapters: ChapterType[];
+      };
+    }) => firebaseModifyLecture(variables.lectureId, variables.updatedData),
+    onSuccess: () => {
+      location.replace("/mypage/my-lecture");
+    },
+    onError: (err) => {
+      console.log(err);
+    },
   });
 };

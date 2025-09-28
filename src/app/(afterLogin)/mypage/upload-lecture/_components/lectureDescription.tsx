@@ -5,12 +5,14 @@ import MDEditor from "@uiw/react-md-editor";
 
 interface LectureDescriptionProps {
   previewDescription?: string;
+  defaultValue?: string;
 }
 
 export default function LectureDescription({
   previewDescription,
+  defaultValue,
 }: LectureDescriptionProps) {
-  const [description, setDescription] = useState(previewDescription ?? "");
+  const [description, setDescription] = useState(defaultValue ?? "");
 
   useEffect(() => {
     if (previewDescription !== undefined) {

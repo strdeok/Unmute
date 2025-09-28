@@ -6,7 +6,6 @@ export default function SideBarHeader({
 }: {
   userData: DocumentData | null | undefined;
 }) {
-  console.log(userData);
   return (
     <div className="w-full h-16 flex justify-around items-center">
       {!userData ? (
