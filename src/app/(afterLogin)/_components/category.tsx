@@ -10,7 +10,7 @@ export default function Category() {
   const level = params.get("level") || "전체";
 
   return (
-    <div className="h-14 flex flex-row flex-nowrap gap-8 text-sm w-96 overflow-x-scroll hide-scrollbar">
+    <div className="h-14 flex flex-row flex-nowrap gap-8 text-sm w-md max-w-md overflow-x-scroll hide-scrollbar">
       {levels.map((item) => {
         return (
           <Link

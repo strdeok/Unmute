@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <main className="relative m-auto w-96 h-full pb-16 overflow-x-hidden hide-scrollbar">
+        <main className="relative m-auto max-w-md h-full pb-16 overflow-x-hidden hide-scrollbar">
           <AppQueryClientProvider>
             <Suspense fallback={<Loading />}>{children}</Suspense>
             <Analytics />

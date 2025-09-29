@@ -1,9 +1,9 @@
 // HomeIcon.jsx
-export default function HomeIcon({ fill }: { fill: string }) {
+export default function HomeIcon({ size, fill }: { size: number, fill: string }) {
   return (
     <svg
-      width="25"
-      height="24"
+      width={size || 25}
+      height={size || 24}
       viewBox="0 0 25 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -19,8 +19,8 @@ export default function HomeIcon({ fill }: { fill: string }) {
       <defs>
         <clipPath id="clip0_45_751">
           <rect
-            width="24"
-            height="24"
+            width={size || 24}
+            height={size || 24}
             fill="white"
             transform="translate(0.75)"
           />
