@@ -1,6 +1,7 @@
 import firebaseGetLectureInfo from "@/firebase/lecture/firebaseGetLectureInfo";
 import { firebaseGetLecturewithId } from "@/firebase/lecture/firebaseGetLecturewithId";
 import { firebaseModifyLecture } from "@/firebase/lecture/firebaseModifyLecture";
+import firebaseDeleteLecture from "@/firebase/lecture/firebaseDeleteLecture";
 import { ChapterType } from "@/type/chapter";
 import {
   useMutation,
@@ -68,5 +69,16 @@ export const useModifyLecture = () => {
     onError: (err) => {
       console.log(err);
     },
+  });
+};
+
+export const useDeleteLecture = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["deleteLecture"],
+    mutationFn: (lectureId: string) => firebaseDeleteLecture(lectureId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["uploadLecture"] });
+    }
   });
 };

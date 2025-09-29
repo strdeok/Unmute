@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { DocumentData, Timestamp } from "firebase/firestore";
+import { useDeleteLecture } from "@/hooks/useLecture";
 
 const formatDate = (timestamp: Timestamp) => {
   if (!timestamp) return "";
@@ -19,6 +20,8 @@ export default function LectureItem({ lecture }: { lecture: DocumentData }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  const { mutate: deleteLecture, isPending } = useDeleteLecture();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -65,6 +68,7 @@ export default function LectureItem({ lecture }: { lecture: DocumentData }) {
             e.stopPropagation();
             setIsMenuOpen((prev) => !prev);
           }}
+          disabled={isPending}
           className="text-gray-500 hover:text-gray-800"
           aria-label="옵션"
         >
@@ -77,8 +81,10 @@ export default function LectureItem({ lecture }: { lecture: DocumentData }) {
               onClick={(e) => {
                 e.stopPropagation();
                 console.log("삭제 클릭");
+                deleteLecture(lecture.id);
                 setIsMenuOpen(false);
               }}
+              disabled={isPending}
               className="w-full text-center p-2 hover:bg-gray-100"
             >
               삭제
@@ -88,6 +94,7 @@ export default function LectureItem({ lecture }: { lecture: DocumentData }) {
                 e.stopPropagation();
                 router.push(`/mypage/upload-lecture?lectureId=${lecture.id}`);
               }}
+              disabled={isPending}
               className="w-full text-center p-2 hover:bg-gray-100"
             >
               수정
