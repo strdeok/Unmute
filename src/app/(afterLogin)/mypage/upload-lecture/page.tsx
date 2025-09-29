@@ -7,7 +7,6 @@ import PrevArrowIcon from "@/assets/prevArrow";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChapterType } from "@/type/chapter";
-import firebaseGetUserInfo from "@/firebase/user/firebaseGetUserInfo";
 import firebaseUploadThumbnail from "@/firebase/lecture/firebaseUploadThumbnail";
 import { useUploadLecture } from "@/hooks/useUploadLecture";
 import Loading from "@/app/loading";
@@ -17,11 +16,12 @@ import useGetUserData from "@/hooks/useGetUserData";
 import InfoIcon from "@/assets/info";
 import { useGetLecturewithId, useModifyLecture } from "@/hooks/useLecture";
 import { LectureWithChapters } from "@/type/lecture";
+import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 
 export default function UploadLecturePage() {
   const router = useRouter();
-  const [userUid, setUserUid] = useState<string | null>(null);
-  const { data: userDataSnapshot } = useGetUserData(userUid || "");
+  const { data: user } = useGetUserInfo();
+  const { data: userDataSnapshot } = useGetUserData(user?.uid || "");
   const userData = userDataSnapshot?.data();
 
   const [initialData, setInitialData] = useState({
@@ -77,16 +77,6 @@ export default function UploadLecturePage() {
       setThumbnailName(existingLecture.thumbnailUrl);
     }
   }, [isModify, lectureData]);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const user = await firebaseGetUserInfo();
-      if (user?.uid) {
-        setUserUid(user.uid);
-      }
-    };
-    fetchUser();
-  }, []);
 
   const checkForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -151,7 +141,9 @@ export default function UploadLecturePage() {
           updatedData: updatableData,
         });
       } else {
-        if (!userData?.uid || !userData?.name) {
+        if (!user?.uid || !userData?.name) {
+          console.log(user?.uid);
+          console.log(userData?.name);
           alert("강사 정보가 올바르지 않습니다. 잠시 후 다시 시도해주세요.");
           return;
         }
@@ -159,7 +151,7 @@ export default function UploadLecturePage() {
         const newLecturePayload = {
           ...updatableData,
           instructorName: userData.name,
-          instructorId: userData.uid,
+          instructorId: user?.uid,
         };
         uploadLecture(newLecturePayload);
       }
