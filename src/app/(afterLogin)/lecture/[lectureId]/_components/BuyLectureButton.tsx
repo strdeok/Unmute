@@ -35,7 +35,6 @@ export default function BuyLectureButton({
   });
 
   const { mutate: deleteCartLecture } = useDeleteCartLecture({
-    lectureId,
     userId: user?.uid || "",
   });
 
@@ -65,9 +64,14 @@ export default function BuyLectureButton({
 
   const isExist = cartLectureData?.find((cart) => cart.lectureId === lectureId);
 
+  const handleContinueLecture = () => {
+    router.push(
+      `/lecture/${lectureId}/${currentLecturePurchaseInfo?.recentWatched}`
+    );
+  };
   const handleCartLecture = () => {
     if (isExist) {
-      deleteCartLecture();
+      deleteCartLecture({ lectureId });
     } else {
       uploadCartLecture(undefined, {
         onSuccess: () => {
@@ -75,10 +79,6 @@ export default function BuyLectureButton({
         },
       });
     }
-  };
-
-  const handleContinueLecture = () => {
-    router.push(`/lecture/${lectureId}/${currentLecturePurchaseInfo?.recentWatched}`);
   };
 
   if (!isBuy) {

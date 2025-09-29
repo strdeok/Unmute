@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   firebaseGetPurchaseLecture,
   firebasePurchaseLectures,
@@ -11,9 +11,15 @@ export const usePurchaseLecture = ({
   userId: string;
   lectureId: string[];
 }) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["purchaseLecture"],
     mutationFn: () => firebasePurchaseLectures(userId, lectureId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["myLecture", userId] });
+      queryClient.invalidateQueries({ queryKey: ["cartLecture", userId] });
+      queryClient.invalidateQueries({ queryKey: ["lecturewithId"] });
+    },
   });
 };
 

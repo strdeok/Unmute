@@ -8,6 +8,7 @@ import CheckIcon from "@/assets/check";
 import { useState } from "react";
 import {
   useDeleteCartLecture,
+  useDeleteCartLectures,
   useGetCartLecture,
 } from "@/hooks/useCartLecture";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
@@ -20,14 +21,15 @@ import { useRouter } from "next/navigation";
 
 export default function CartItems() {
   const [checkedList, setCheckedList] = useState<string[]>([]);
-  const [deleteLectureId, setDeleteLectureId] = useState<string>("");
   const router = useRouter();
   const { data: user } = useGetUserInfo();
   const { data: cartLectureData, isLoading } = useGetCartLecture({
     userId: user?.uid || "",
   });
   const { mutate: deleteCartLecture } = useDeleteCartLecture({
-    lectureId: deleteLectureId,
+    userId: user?.uid || "",
+  });
+  const { mutate: deleteCartLectures } = useDeleteCartLectures({
     userId: user?.uid || "",
   });
   const { mutate: purchaseLecture, isPending } = usePurchaseLecture({
@@ -58,15 +60,20 @@ export default function CartItems() {
   };
 
   const handleDeleteCartLecture = (id: string) => {
-    setDeleteLectureId(id);
-    deleteCartLecture();
+    deleteCartLecture({
+      lectureId: id,
+    });
     setCheckedList(checkedList.filter((item) => item !== id));
   };
 
   const handlePurchaseLecture = () => {
     purchaseLecture(undefined, {
       onSuccess: () => {
-        deleteCartLecture();
+        // 구매된 강의들을 카트에서 삭제
+        deleteCartLectures({
+          lectureIds: checkedList,
+        });
+        setCheckedList([]);
         alert("강의가 구매되었습니다.");
         router.replace("/mycourses");
       },
@@ -92,7 +99,7 @@ export default function CartItems() {
     );
 
   return (
-    <div className="flex flex-col items-center bg-[#F6F6F6] h-full px-6 py-4">
+    <div className="flex flex-col gap-2 items-center bg-[#F6F6F6] h-full px-6 py-4">
       {lectureInfo.map((info) => {
         return (
           <div

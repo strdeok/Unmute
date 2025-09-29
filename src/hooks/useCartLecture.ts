@@ -26,17 +26,15 @@ export const useUploadCartLecture = ({
 };
 
 // 강의 장바구니 삭제
-export const useDeleteCartLecture = ({
-  lectureId,
-  userId,
-}: {
-  lectureId: string;
-  userId: string;
-}) => {
+export const useDeleteCartLecture = ({userId}: {userId: string}) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["cartLecture", userId],
-    mutationFn: () => firebaseDeleteCartLecture(lectureId, userId),
+    mutationFn: ({
+      lectureId,
+    }: {
+      lectureId: string;
+    }) => firebaseDeleteCartLecture(lectureId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cartLecture"] });
     },
@@ -45,16 +43,14 @@ export const useDeleteCartLecture = ({
 
 // 강의 여러개 장바구니 삭제
 export const useDeleteCartLectures = ({
-  lectureIds,
   userId,
 }: {
-  lectureIds: string[];
   userId: string;
 }) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["cartLecture", userId],
-    mutationFn: async () => {
+    mutationFn: async ({ lectureIds }: { lectureIds: string[] }) => {
       const batch = writeBatch(db);
 
       lectureIds.forEach((lectureId) => {

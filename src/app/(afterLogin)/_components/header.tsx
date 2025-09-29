@@ -8,6 +8,7 @@ import Image from "next/image";
 import useGetUserData from "@/hooks/useGetUserData";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { usePathname } from "next/navigation";
+import CartIcon from "./cartIcon";
 
 export default function Header() {
   const pathname = usePathname();
@@ -54,15 +55,18 @@ export default function Header() {
           ) : !userData ? (
             <Link href="/login">로그인</Link>
           ) : (
-            <div className="relative size-12 border border-gray-300 flex items-center justify-center rounded-full overflow-hidden">
-              <Image
-                fill
-                alt="avatar"
-                src={
-                  userData.profileImage ||
-                  "https://firebasestorage.googleapis.com/v0/b/unmute-c38ab.firebasestorage.app/o/userAvatar%2Fdefault-avatar.png?alt=media&token=9f0d0fca-05a6-418f-9e40-fdcff33d466c"
-                }
-              />
+            <div className="flex flex-row items-center gap-2">
+              <CartIcon />
+              <div className="relative size-12 border border-gray-300 flex items-center justify-center rounded-full overflow-hidden">
+                <Image
+                  fill
+                  alt="avatar"
+                  src={
+                    userData.profileImage ||
+                    "https://firebasestorage.googleapis.com/v0/b/unmute-c38ab.firebasestorage.app/o/userAvatar%2Fdefault-avatar.png?alt=media&token=9f0d0fca-05a6-418f-9e40-fdcff33d466c"
+                  }
+                />
+              </div>
             </div>
           )}
         </div>

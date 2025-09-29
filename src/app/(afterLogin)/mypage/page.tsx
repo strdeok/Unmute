@@ -7,16 +7,40 @@ import Image from "next/image";
 import { firebaseSignOut } from "@/firebase/user/firebaseSignOut";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import useGetUserData from "@/hooks/useGetUserData";
-import UserIcon from "@/assets/user";
+import { useRouter } from "next/navigation";
 
 export default function Mypage() {
-  const { data: userData } = useGetUserInfo();
-  const { data: UserInfo } = useGetUserData(userData?.uid || "");
+  const router = useRouter();
+  const { data: UserInfo, isLoading: isUserInfoLoading } = useGetUserInfo();
+  const { data: userDataSnapshot, isLoading: isUserDataLoading } =
+    useGetUserData(UserInfo?.uid || "");
 
-  const userInfo = UserInfo?.data();
-  const role = userInfo?.role;
+  if (isUserInfoLoading || isUserDataLoading) {
+    return <div>로딩 중...</div>;
+  }
 
-  if (!userData) {
+  if (!UserInfo) {
+    return (
+      <div className="flex flex-col items-center h-full justify-center gap-4">
+        <span>로그인 이후에 이용 가능합니다</span>
+        <Link className="bg-main text-white rounded-md px-4 py-2" href="/login">
+          로그인
+        </Link>
+      </div>
+    );
+  }
+
+  const userDocument = userDataSnapshot?.data();
+  const role = userDocument?.role;
+
+  console.log(userDocument);
+
+  const handleSignOut = () => {
+    firebaseSignOut();
+    router.push("/");
+  };
+
+  if (!userDataSnapshot) {
     return (
       <div className="flex flex-col items-center h-full justify-center gap-4">
         <span>로그인 이후에 이용 가능합니다</span>
@@ -33,15 +57,18 @@ export default function Mypage() {
 
       <div id="profile-data" className="flex flex-col items-center gap-4">
         <div className="relative border size-32 overflow-hidden rounded-full flex justify-center items-center">
-          {false ? (
-            <Image alt="avatar" src={userInfo?.profileImage} fill />
-          ) : (
-            <div className="flex justify-center items-center">
-              <UserIcon fill="black" width={64} height={64} />
-            </div>
-          )}
+          <Image
+            alt="avatar"
+            src={
+              userDataSnapshot?.data()?.profileImage ||
+              "https://firebasestorage.googleapis.com/v0/b/unmute-c38ab.firebasestorage.app/o/userAvatar%2Fdefault-avatar.png?alt=media&token=9f0d0fca-05a6-418f-9e40-fdcff33d466c"
+            }
+            fill
+          />
         </div>
-        <span className="font-bold text-xl">{userInfo?.name}</span>
+        <span className="font-bold text-xl">
+          {userDataSnapshot?.data()?.name}
+        </span>
       </div>
 
       {/* <div id="lecture-progress" className="p-4 flex flex-row gap-3">
@@ -94,7 +121,7 @@ export default function Mypage() {
           계정 정보
         </div>
         <Link
-          href="/"
+          href="/mypage/edit-profile"
           className="h-12 flex flex-row justify-between items-center"
         >
           프로필 수정 <NextArrowIcon fill="black" />
@@ -103,13 +130,13 @@ export default function Mypage() {
           고객 지원
         </div>
         <Link
-          href="/"
+          href="https://open.kakao.com/o/s3S9TAUh"
           className="h-12 flex flex-row justify-between items-center"
         >
           문의 하기 <NextArrowIcon fill="black" />
         </Link>
         <button
-          onClick={firebaseSignOut}
+          onClick={handleSignOut}
           className="h-12 flex flex-row justify-between items-center"
         >
           로그아웃

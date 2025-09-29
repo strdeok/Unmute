@@ -10,10 +10,7 @@ import FilledCartIcon from "@/assets/filledCart";
 export default function CartButton({ lectureId }: { lectureId: string }) {
   const { data: user } = useGetUserInfo();
 
-  const {
-    mutate: uploadCartLecture,
-    isPending,
-  } = useUploadCartLecture({
+  const { mutate: uploadCartLecture, isPending } = useUploadCartLecture({
     lectureId,
     userId: user?.uid || "",
   });
@@ -23,7 +20,6 @@ export default function CartButton({ lectureId }: { lectureId: string }) {
   });
 
   const { mutate: deleteCartLecture } = useDeleteCartLecture({
-    lectureId,
     userId: user?.uid || "",
   });
 
@@ -31,7 +27,7 @@ export default function CartButton({ lectureId }: { lectureId: string }) {
 
   const handleCartLecture = () => {
     if (isExist) {
-      deleteCartLecture();
+      deleteCartLecture({ lectureId });
     } else {
       uploadCartLecture(undefined, {
         onSuccess: () => {
