@@ -9,4 +9,6 @@ export const CASE_LIST = [
   { label: "네트워킹", value: "networking" },
   { label: "고객 응대", value: "customer_service" },
   { label: "면접", value: "interview" },
+  { label: "일상생활", value: "daily_life" },
+  { label: "기타", value: "etc" },
 ];

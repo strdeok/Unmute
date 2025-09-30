@@ -19,4 +19,6 @@ export const CATEGORY_LIST = [
   { label: "교육", value: "education" },
   { label: "서비스 / 요식업", value: "service_hospitality" },
   { label: "미디어 / 엔터테인먼트", value: "media_entertainment" },
+  { label: "일상생활", value: "daily_life" },
+  { label: "기타", value: "etc" },
 ];
